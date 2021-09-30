@@ -39,6 +39,7 @@
     "@mikro-orm/core": "^4.5.9",
     "config": "^3.3.6",
     "express": "^4.17.1",
-    "express-async-handler": "^1.1.4"
+    "express-async-handler": "^1.1.4",
+    "reflect-metadata": "^0.1.13"
   }
 }
