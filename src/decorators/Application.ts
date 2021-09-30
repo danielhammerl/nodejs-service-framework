@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import express, { Express } from 'express';
 import config from 'config';
+import bodyParser from 'body-parser';
 
 import { critical, debug, error, info } from '../internalUtils/logging';
 import { setConfigDefaults } from '../internal/setConfigDefaults';
@@ -35,6 +36,9 @@ export const InitApplication = (metaData?: ApplicationMetaData): void => {
         RequestContext.create(orm.em, next);
       });
     }
+
+    app.use(bodyParser.json());
+    app.use(express.json());
 
     // TODO add catch
     // TODO Make less messy
