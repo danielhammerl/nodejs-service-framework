@@ -23,35 +23,6 @@ export interface ApplicationMetaData {
  * @constructor
  */
 export const InitApplication = (metaData: ApplicationMetaData): void => {
-  function startApplication(orm: MikroORM | null) {
-    debug('Starting Application ...');
-    debug('Set default configuration ...');
-    setConfigDefaults();
-
-    const app = express();
-
-    const webserverPort = config.get<number>('webserver.port');
-    const webserverHost = config.get<string>('webserver.host');
-
-    if (orm) {
-      app.use((req, res, next) => {
-        RequestContext.create(orm.em, next);
-      });
-    }
-
-    app.use(bodyParser.json());
-    app.use(express.json());
-
-    app.get('/health', (req, res) => res.status(200).send(metaData.serviceName));
-
-    // TODO add catch
-    metaData?.beforeStartMethod(app).then(() => {
-      app.listen(webserverPort, webserverHost, () => {
-        info(`Webserver started on ${webserverHost}:${webserverPort}`);
-      });
-    });
-  }
-
   const useDatabase = config.has('database.type') && config.has('database.url');
 
   if (useDatabase) {
@@ -61,13 +32,12 @@ export const InitApplication = (metaData: ApplicationMetaData): void => {
       warn('No mikro orm entities specified');
     }
     _initOrm(metaData?.mikroOrmEntities ?? []).then((orm) => {
-      startApplication(orm);
+      startApplication(orm, metaData);
     });
   } else {
-    startApplication(null);
+    startApplication(null, metaData);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   const tearDownApplication = async () => {
     info('Tear down application');
   };
@@ -95,3 +65,32 @@ export const InitApplication = (metaData: ApplicationMetaData): void => {
     });
   });
 };
+
+function startApplication(orm: MikroORM | null, metaData: ApplicationMetaData) {
+  debug('Starting Application ...');
+  debug('Set default configuration ...');
+  setConfigDefaults();
+
+  const app = express();
+
+  const webserverPort = config.get<number>('webserver.port');
+  const webserverHost = config.get<string>('webserver.host');
+
+  if (orm) {
+    app.use((req, res, next) => {
+      RequestContext.create(orm.em, next);
+    });
+  }
+
+  app.use(bodyParser.json());
+  app.use(express.json());
+
+  app.get('/health', (req, res) => res.status(200).send(metaData.serviceName));
+
+  // TODO add catch
+  metaData?.beforeStartMethod(app).then(() => {
+    app.listen(webserverPort, webserverHost, () => {
+      info(`Webserver started on ${webserverHost}:${webserverPort}`);
+    });
+  });
+}
