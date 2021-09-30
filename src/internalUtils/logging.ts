@@ -1,4 +1,5 @@
 //TODO define logging levels
+//TODO implement winston
 
 /**
  * This method will show a console.debug output to the framework consumer
