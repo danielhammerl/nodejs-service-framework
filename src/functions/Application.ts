@@ -27,10 +27,6 @@ export const InitApplication = (metaData: ApplicationMetaData): void => {
 
   if (useDatabase) {
     debug('Connecting to database ...');
-    if (!metaData?.mikroOrmEntities) {
-      // TODO should be suppressable
-      warn('No mikro orm entities specified');
-    }
     _initOrm(metaData?.mikroOrmEntities ?? []).then((orm) => {
       startApplication(orm, metaData);
     });
