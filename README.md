@@ -16,13 +16,14 @@ An example configuration would be the following:
         "port": number, // default: 8080
     },
     "database": {
-    
+        "type": string, // see mikroorm for supported types ( https://mikro-orm.io/docs/configuration/#driver )
+        "url": string, // for example mysql://root:@localhost/test
     },
     "logging": {
         transports: [
             {
-                type: 'console', // there will be more in future
-                level: string // to be defined
+                "type": 'console', // there will be more in future
+                "level": string // to be defined
             }
         ]
     }
