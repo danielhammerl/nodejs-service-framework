@@ -17,6 +17,14 @@ An example configuration would be the following:
     },
     "database": {
     
+    },
+    "logging": {
+        transports: [
+            {
+                type: 'console', // there will be more in future
+                level: string // to be defined
+            }
+        ]
     }
 }
 ```

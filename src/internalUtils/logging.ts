@@ -1,4 +1,4 @@
-import { getApplicationConfig } from '../internal/ApplicationConfig';
+//TODO define logging levels
 
 /**
  * This method will show a console.debug output to the framework consumer
@@ -6,9 +6,7 @@ import { getApplicationConfig } from '../internal/ApplicationConfig';
  * @param params
  */
 export const debug = (...params: unknown[]): void => {
-  if (getApplicationConfig().frameworkDebugMode) {
     console.debug('[DEBUG] @danielhammerl/nodejs-service-framework:', ...params);
-  }
 };
 
 /**
