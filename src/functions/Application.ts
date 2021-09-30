@@ -1,17 +1,19 @@
-import 'reflect-metadata';
+process.env.SUPPRESS_NO_CONFIG_WARNING = 'y';
+
 import express, { Express } from 'express';
 import config from 'config';
 import bodyParser from 'body-parser';
-
-import { critical, debug, error, info } from '../internalUtils/logging';
-import { setConfigDefaults } from '../internal/setConfigDefaults';
-import { _initOrm } from '../utils/getORM';
 import { MikroORMOptions } from '@mikro-orm/core/utils/Configuration';
 import { MikroORM, RequestContext } from '@mikro-orm/core';
 
+import { critical, debug, info, warn } from '../internalUtils/logging';
+import { setConfigDefaults } from '../internal/setConfigDefaults';
+import { _initOrm } from '../utils/getORM';
+
 export interface ApplicationMetaData {
   mikroOrmEntities?: MikroORMOptions['entities'];
-  beforeStartMethod?: (app: Express) => Promise<void>;
+  beforeStartMethod: (app: Express) => Promise<void>;
+  serviceName: string;
 }
 
 // TODO Documentation
@@ -20,7 +22,7 @@ export interface ApplicationMetaData {
  * @param metaData
  * @constructor
  */
-export const InitApplication = (metaData?: ApplicationMetaData): void => {
+export const InitApplication = (metaData: ApplicationMetaData): void => {
   function startApplication(orm: MikroORM | null) {
     debug('Starting Application ...');
     debug('Set default configuration ...');
@@ -40,9 +42,10 @@ export const InitApplication = (metaData?: ApplicationMetaData): void => {
     app.use(bodyParser.json());
     app.use(express.json());
 
+    app.get('/health', (req, res) => res.status(200).send(metaData.serviceName));
+
     // TODO add catch
-    // TODO Make less messy
-    (metaData?.beforeStartMethod ? metaData?.beforeStartMethod(app) : new Promise((resolve) => resolve)).then(() => {
+    metaData?.beforeStartMethod(app).then(() => {
       app.listen(webserverPort, webserverHost, () => {
         info(`Webserver started on ${webserverHost}:${webserverPort}`);
       });
@@ -55,7 +58,7 @@ export const InitApplication = (metaData?: ApplicationMetaData): void => {
     debug('Connecting to database ...');
     if (!metaData?.mikroOrmEntities) {
       // TODO should be suppressable
-      console.warn('No mikro orm entities specified');
+      warn('No mikro orm entities specified');
     }
     _initOrm(metaData?.mikroOrmEntities ?? []).then((orm) => {
       startApplication(orm);
@@ -65,7 +68,9 @@ export const InitApplication = (metaData?: ApplicationMetaData): void => {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  const tearDownApplication = async () => {};
+  const tearDownApplication = async () => {
+    info('Tear down application');
+  };
 
   process.on('uncaughtException', function (err) {
     critical('Uncaught exception: ' + err.stack);
