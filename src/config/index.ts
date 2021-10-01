@@ -3,6 +3,7 @@ import path from 'path';
 import dotenv from 'dotenv';
 import mergeOptions from 'merge-options';
 import _get from 'lodash.get';
+import { DotNestedKeys } from '../utils/types';
 
 const defaultConfig = {
   webserver: {
@@ -21,7 +22,6 @@ const defaultConfig = {
 
 dotenv.config();
 
-// TODO type safety?
 // TODO add overwrite by env variable
 
 const fileExtension = '.json';
@@ -41,7 +41,7 @@ const defaultConfigFile: Record<string, unknown> | undefined = readAndParseFile(
 );
 
 const loadedConfigFile: Record<string, unknown> | undefined = nodeEnv
-  ? readAndParseFile(path.resolve(process.cwd(), './config', defaultConfigFileName + fileExtension))
+  ? readAndParseFile(path.resolve(process.cwd(), './config', nodeEnv + fileExtension))
   : undefined;
 
 let config: Record<string, unknown> | null = null;
@@ -50,5 +50,13 @@ const customMergeOptions = (...params: unknown[]) => mergeOptions.call({ ignoreU
 
 config = customMergeOptions(customMergeOptions(defaultConfig ?? {}, defaultConfigFile ?? {}), loadedConfigFile ?? {});
 
-export const getConfig = <T extends unknown>(propertyName: string): T | undefined =>
-  (_get(config, propertyName) as T) ?? undefined;
+// with this beautiful method overload, we make ts safe that we always have a value and not undefined,
+// if we access a config key which is present in the defaultConfig
+
+function getConfig<T extends unknown>(propertyName: DotNestedKeys<typeof defaultConfig>): T;
+function getConfig<T extends unknown>(propertyName: string): T;
+function getConfig<T extends unknown>(propertyName: string): T | undefined {
+  return (_get(config, propertyName) as T) ?? undefined;
+}
+
+export { getConfig };

@@ -1,6 +1,7 @@
 import { MikroORM } from '@mikro-orm/core';
 import { MikroORMOptions } from '@mikro-orm/core/utils/Configuration';
 import { getConfig } from '../config';
+import { logger } from '../logging';
 
 let orm: MikroORM | null = null;
 
@@ -12,13 +13,17 @@ export const _initOrm = async (entities: MikroORMOptions['entities']): Promise<M
   }
 
   // TODO what if we pass the wrong db type as config?
-  orm = await MikroORM.init({
-    type: databaseConfig.type,
-    clientUrl: databaseConfig.url,
-    entities,
-  });
-
-  return orm;
+  try {
+    orm = await MikroORM.init({
+      type: databaseConfig.type,
+      clientUrl: databaseConfig.url,
+      entities,
+    });
+    return orm;
+  } catch (e) {
+    logger.log('error', 'Failed initializing database connection');
+    throw e;
+  }
 };
 
 export const getOrm = async (): Promise<MikroORM> => {
@@ -26,6 +31,6 @@ export const getOrm = async (): Promise<MikroORM> => {
     return orm;
   }
 
-  // TODO error handling
-  throw Error('MikroORM is not initialized yet ...');
+  logger.log('error', 'Failed accessing database! Not initialized yet');
+  throw new Error('Failed accessing database! Not initialized yet');
 };

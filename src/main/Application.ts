@@ -24,10 +24,24 @@ export const InitApplication = (metaData: ApplicationMetaData): void => {
 
   if (useDatabase) {
     logger.log('framework', 'Connecting to database ...');
-    _initOrm(metaData?.mikroOrmEntities ?? []).then((orm) => {
-      startApplication(orm, metaData);
-    });
+    _initOrm(metaData?.mikroOrmEntities ?? [])
+      .then((orm: MikroORM) => {
+        logger.log('framework', 'Connecting to database ' + orm.config.getClientUrl(true));
+        startApplication(orm, metaData);
+      })
+      .catch((e) => {
+        if (e instanceof Error && e.message.startsWith('Cannot find module ')) {
+          logger.log(
+            'error',
+            'Cannot find database driver. You have to install the driver on your own. MikroORM exception:\n' + e
+          );
+          return;
+        } else {
+          throw e;
+        }
+      });
   } else {
+    logger.log('framework', 'No database specified');
     startApplication(null, metaData);
   }
 
@@ -36,6 +50,7 @@ export const InitApplication = (metaData: ApplicationMetaData): void => {
   };
 
   process.on('uncaughtException', function (err) {
+    logger.log('critical', 'Uncaught exception! This may be a bug in nodejs-service-framework');
     logger.log('critical', 'Uncaught exception: ' + err.stack);
     tearDownApplication().finally(() => {
       process.exit(1);
@@ -65,8 +80,8 @@ function startApplication(orm: MikroORM | null, metaData: ApplicationMetaData) {
 
   const app = express();
 
-  const webserverPort = getConfig<number>('webserver.port')!;
-  const webserverHost = getConfig<string>('webserver.host')!;
+  const webserverPort = getConfig<number>('webserver.port');
+  const webserverHost = getConfig<string>('webserver.host');
 
   if (orm) {
     app.use((req, res, next) => {
