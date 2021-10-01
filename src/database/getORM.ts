@@ -1,18 +1,20 @@
 import { MikroORM } from '@mikro-orm/core';
 import { MikroORMOptions } from '@mikro-orm/core/utils/Configuration';
-import config from 'config';
+import { getConfig } from '../config';
 
 let orm: MikroORM | null = null;
 
 export const _initOrm = async (entities: MikroORMOptions['entities']): Promise<MikroORM> => {
-  if (!config.has('database.url') || !config.has('database.type')) {
+  const databaseConfig = getConfig<{ type: 'mysql'; url: string }>('database');
+  if (!databaseConfig) {
     // TODO error handling
     throw new Error('database is not configured correctly');
   }
 
+  // TODO what if we pass the wrong db type as config?
   orm = await MikroORM.init({
-    type: config.get('database.type'),
-    clientUrl: config.get('database.url'),
+    type: databaseConfig.type,
+    clientUrl: databaseConfig.url,
     entities,
   });
 

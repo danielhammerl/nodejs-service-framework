@@ -1,21 +1,18 @@
-process.env.SUPPRESS_NO_CONFIG_WARNING = 'y';
-
 import express, { Express } from 'express';
-import config from 'config';
 import bodyParser from 'body-parser';
 import { MikroORMOptions } from '@mikro-orm/core/utils/Configuration';
 import { MikroORM, RequestContext } from '@mikro-orm/core';
 
-import { critical, debug, info, warn } from '../internalUtils/logging';
-import { setConfigDefaults } from '../internal/setConfigDefaults';
-import { _initOrm } from '../utils/getORM';
+import { _initOrm } from '../database/getORM';
+import { logger } from '../logging';
+import { getConfig } from '../config';
 
 export interface ApplicationMetaData {
   mikroOrmEntities?: MikroORMOptions['entities'];
   beforeStartMethod: (app: Express) => Promise<void>;
   serviceName: string;
 }
-
+// TODO config system testen
 // TODO Documentation
 /**
  *
@@ -23,10 +20,10 @@ export interface ApplicationMetaData {
  * @constructor
  */
 export const InitApplication = (metaData: ApplicationMetaData): void => {
-  const useDatabase = config.has('database.type') && config.has('database.url');
+  const useDatabase = !!getConfig('database');
 
   if (useDatabase) {
-    debug('Connecting to database ...');
+    logger.log('framework', 'Connecting to database ...');
     _initOrm(metaData?.mikroOrmEntities ?? []).then((orm) => {
       startApplication(orm, metaData);
     });
@@ -35,11 +32,11 @@ export const InitApplication = (metaData: ApplicationMetaData): void => {
   }
 
   const tearDownApplication = async () => {
-    info('Tear down application');
+    logger.log('framework', 'Tear down application');
   };
 
   process.on('uncaughtException', function (err) {
-    critical('Uncaught exception: ' + err.stack);
+    logger.log('critical', 'Uncaught exception: ' + err.stack);
     tearDownApplication().finally(() => {
       process.exit(1);
     });
@@ -63,14 +60,13 @@ export const InitApplication = (metaData: ApplicationMetaData): void => {
 };
 
 function startApplication(orm: MikroORM | null, metaData: ApplicationMetaData) {
-  debug('Starting Application ...');
-  debug('Set default configuration ...');
-  setConfigDefaults();
+  logger.log('framework', 'Starting Application ...');
+  logger.log('framework', 'Set default configuration ...');
 
   const app = express();
 
-  const webserverPort = config.get<number>('webserver.port');
-  const webserverHost = config.get<string>('webserver.host');
+  const webserverPort = getConfig<number>('webserver.port')!;
+  const webserverHost = getConfig<string>('webserver.host')!;
 
   if (orm) {
     app.use((req, res, next) => {
@@ -86,7 +82,7 @@ function startApplication(orm: MikroORM | null, metaData: ApplicationMetaData) {
   // TODO add catch
   metaData?.beforeStartMethod(app).then(() => {
     app.listen(webserverPort, webserverHost, () => {
-      info(`Webserver started on ${webserverHost}:${webserverPort}`);
+      logger.log('info', `Webserver started on ${webserverHost}:${webserverPort}`);
     });
   });
 }

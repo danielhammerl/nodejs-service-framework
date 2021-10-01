@@ -20,10 +20,10 @@ An example configuration would be the following:
         "url": string, // for example mysql://root:@localhost/test
     },
     "logging": {
-        transports: [
+        "transports": [ // default is a console transport if you dont defined otherwise
             {
                 "type": 'console', // there will be more in future
-                "level": string // to be defined
+                "level": string // minimum log level ( critical, error, warning, info, framework, debug, silly ) // default is framework
             }
         ]
     }
