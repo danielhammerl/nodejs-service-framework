@@ -5,7 +5,7 @@ import { findLongestStringInArray } from '../utils/array';
 import { getConfig } from '../config';
 import { InvalidConfigurationException } from '../exceptions/InvalidConfigurationException';
 
-// TODO ausgiebig teste
+// TODO farben funktionieren noch nicht
 winston.addColors(logLevelColors);
 
 const getLoggingTransports = (): winston.transport[] => {
