@@ -30,6 +30,7 @@ dotenv.config();
 const fileExtension = '.json';
 const defaultConfigFileName = 'default';
 const nodeEnv = process.env.NODE_ENV;
+const configDirectory = path.resolve(process.cwd(), './src/config');
 
 const readAndParseFile = (filePath: string, ignoreParsingErrors = false): Record<string, unknown> | undefined => {
   try {
@@ -57,11 +58,11 @@ const readAndParseFile = (filePath: string, ignoreParsingErrors = false): Record
 };
 
 const defaultConfigFile: Record<string, unknown> | undefined = readAndParseFile(
-  path.resolve(process.cwd(), './config', defaultConfigFileName + fileExtension)
+  path.resolve(configDirectory, defaultConfigFileName + fileExtension)
 );
 
 const loadedConfigFile: Record<string, unknown> | undefined = nodeEnv
-  ? readAndParseFile(path.resolve(process.cwd(), './config', nodeEnv + fileExtension), true)
+  ? readAndParseFile(path.resolve(configDirectory, nodeEnv + fileExtension), true)
   : undefined;
 
 let config: Record<string, unknown> | null = null;
