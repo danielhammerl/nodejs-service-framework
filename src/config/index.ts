@@ -30,7 +30,23 @@ dotenv.config();
 const fileExtension = '.json';
 const defaultConfigFileName = 'default';
 const nodeEnv = process.env.NODE_ENV;
-const configDirectory = path.resolve(process.cwd(), './src/config');
+// all possible config directories, ordered by relevance
+const configDirectories: string[] = [
+  path.resolve(process.cwd(), './.framework_config'),
+  path.resolve(process.cwd(), './config'),
+];
+
+// take the first possible config directory which exists
+const configDirectory: string | undefined = configDirectories.find((dir) => fs.existsSync(dir));
+
+if (!configDirectory) {
+  // eslint-disable-next-line no-console
+  console.error(
+    'Could not find any config directory. Project configurations must be placed in one of the following directores: ' +
+      configDirectories.join(', ')
+  );
+  process.exit(1);
+}
 
 const readAndParseFile = (filePath: string, ignoreParsingErrors = false): Record<string, unknown> | undefined => {
   try {
