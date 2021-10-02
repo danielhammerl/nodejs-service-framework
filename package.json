@@ -10,6 +10,11 @@
   "engines": {
     "node": ">= 16.0"
   },
+  "files": [
+    "build/",
+    "package.json",
+    "package-lock.json"
+  ],
   "main": "./build/index.js",
   "scripts": {
     "build": "dhammerl-cli build",
