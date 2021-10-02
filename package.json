@@ -14,9 +14,10 @@
   "scripts": {
     "build": "dhammerl-cli build",
     "lint": "eslint src/",
+    "test": "echo 'no Tests specified'; exit 0;",
     "lint:fix": "eslint src/ --fix",
     "lint:types": "tsc --noEmit",
-    "todo": "leasot 'src/**/*.ts'",
+    "todo": "leasot -x 'src/**/*.ts'",
     "lint:all": "npm run lint:fix && npm run lint:types && npm run todo"
   },
   "devDependencies": {
