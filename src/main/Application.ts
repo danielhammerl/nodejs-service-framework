@@ -6,6 +6,7 @@ import { MikroORM, RequestContext } from '@mikro-orm/core';
 import { _initOrm } from '../database/getORM';
 import { logger } from '../logging';
 import { getConfig } from '../config';
+import ErrorHandlerMiddleware from '../middleware/ErrorHandlerMiddleware';
 
 export interface ApplicationMetaData {
   mikroOrmEntities?: MikroORMOptions['entities'];
@@ -96,6 +97,7 @@ function startApplication(orm: MikroORM | null, metaData: ApplicationMetaData) {
 
   // TODO add catch
   metaData?.beforeStartMethod(app).then(() => {
+    app.use(ErrorHandlerMiddleware);
     app.listen(webserverPort, webserverHost, () => {
       logger.log('info', `Webserver started on ${webserverHost}:${webserverPort}`);
     });

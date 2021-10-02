@@ -30,9 +30,23 @@ const nodeEnv = process.env.NODE_ENV;
 
 const readAndParseFile = (filePath: string): Record<string, unknown> | undefined => {
   try {
-    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    // replace file variables with variables specified in .env
+    let fileContent = fs.readFileSync(filePath, 'utf8');
+    const regexForVariableReplacement = /\$([\w._-]+)/g;
+    const variables = fileContent.match(new RegExp(regexForVariableReplacement)) ?? [];
+
+    variables.forEach((variableWithDollarSign: string) => {
+      const variableNameWithoutDollarSign = variableWithDollarSign.replaceAll('$', '');
+      const newValue = process.env?.[variableNameWithoutDollarSign] ?? variableWithDollarSign;
+
+      fileContent = fileContent.replaceAll(variableWithDollarSign, newValue);
+    });
+
+    return JSON.parse(fileContent);
   } catch {
-    return {};
+    // eslint-disable-next-line no-console
+    console.error('[Critical]', 'Failed to parse config file: ' + filePath);
+    process.exit(1);
   }
 };
 
