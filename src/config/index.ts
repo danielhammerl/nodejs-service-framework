@@ -32,9 +32,9 @@ const defaultConfigFileName = 'default';
 const nodeEnv = process.env.NODE_ENV;
 // all possible config directories, ordered by relevance
 const configDirectories: string[] = [
-  path.resolve(process.cwd(), './src/framework_config'),
-  path.resolve(process.cwd(), './.framework_config'),
-  path.resolve(process.cwd(), './framework_config'),
+  path.resolve(process.cwd(), './src/config'),
+  path.resolve(process.cwd(), './.config'),
+  path.resolve(process.cwd(), './config'),
 ];
 
 // take the first possible config directory which exists
