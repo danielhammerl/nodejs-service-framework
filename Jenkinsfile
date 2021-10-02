@@ -1,3 +1,3 @@
 @Library('danielhammerl-pipelines') _
 
-buildNodeJsLibrary();
+buildNodejsLibrary();
