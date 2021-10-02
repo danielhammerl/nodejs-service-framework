@@ -1,7 +1,7 @@
 import { MikroORM } from '@mikro-orm/core';
 import { MikroORMOptions } from '@mikro-orm/core/utils/Configuration';
 import { getConfig } from '../config';
-import { logger } from '../logging';
+import { log } from '../logging';
 
 let orm: MikroORM | null = null;
 
@@ -21,7 +21,7 @@ export const _initOrm = async (entities: MikroORMOptions['entities']): Promise<M
     });
     return orm;
   } catch (e) {
-    logger.log('error', 'Failed initializing database connection');
+    log('error', 'Failed initializing database connection');
     throw e;
   }
 };
@@ -31,6 +31,6 @@ export const getOrm = async (): Promise<MikroORM> => {
     return orm;
   }
 
-  logger.log('error', 'Failed accessing database! Not initialized yet');
+  log('error', 'Failed accessing database! Not initialized yet');
   throw new Error('Failed accessing database! Not initialized yet');
 };

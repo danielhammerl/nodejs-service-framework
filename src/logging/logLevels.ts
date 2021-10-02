@@ -1,4 +1,4 @@
-// TODO logger api verbessern, logger.log("xyz" ist nicht typisiert
+// TODO logger api verbessern, log(("xyz" ist nicht typisiert
 
 export type logLevels = 'critical' | 'error' | 'warning' | 'info' | 'framework' | 'debug' | 'silly';
 

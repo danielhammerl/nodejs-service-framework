@@ -1,5 +1,5 @@
 import { ErrorRequestHandler } from 'express';
-import { logger } from '../logging';
+import { log } from '../logging';
 
 // eslint-disable-next-line no-unused-vars
 const ErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
@@ -10,8 +10,8 @@ const ErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
 
     if (!statusCode || statusCode >= 500) {
       // TODO log to own server
-      logger.log('error', message);
-      logger.log('error', stack);
+      log('error', message);
+      log('error', stack);
     }
 
     res.status(statusCode || 500).json({

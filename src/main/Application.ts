@@ -4,9 +4,10 @@ import { MikroORMOptions } from '@mikro-orm/core/utils/Configuration';
 import { MikroORM, RequestContext } from '@mikro-orm/core';
 
 import { _initOrm } from '../database/getORM';
-import { logger } from '../logging';
+import { initLogging, log } from '../logging';
 import { getConfig } from '../config';
 import ErrorHandlerMiddleware from '../middleware/ErrorHandlerMiddleware';
+import { setServiceName } from '../internal/serviceName';
 
 export interface ApplicationMetaData {
   mikroOrmEntities?: MikroORMOptions['entities'];
@@ -21,18 +22,20 @@ export interface ApplicationMetaData {
  * @constructor
  */
 export const InitApplication = (metaData: ApplicationMetaData): void => {
+  setServiceName(metaData.serviceName);
+  initLogging(metaData.serviceName);
   const useDatabase = !!getConfig('database');
 
   if (useDatabase) {
-    logger.log('framework', 'Connecting to database ...');
+    log('framework', 'Connecting to database ...');
     _initOrm(metaData?.mikroOrmEntities ?? [])
       .then((orm: MikroORM) => {
-        logger.log('framework', 'Connecting to database ' + orm.config.getClientUrl(true));
+        log('framework', 'Connecting to database ' + orm.config.getClientUrl(true));
         startApplication(orm, metaData);
       })
       .catch((e) => {
         if (e instanceof Error && e.message.startsWith('Cannot find module ')) {
-          logger.log(
+          log(
             'error',
             'Cannot find database driver. You have to install the driver on your own. MikroORM exception:\n' + e
           );
@@ -42,17 +45,17 @@ export const InitApplication = (metaData: ApplicationMetaData): void => {
         }
       });
   } else {
-    logger.log('framework', 'No database specified');
+    log('framework', 'No database specified');
     startApplication(null, metaData);
   }
 
   const tearDownApplication = async () => {
-    logger.log('framework', 'Tear down application');
+    log('framework', 'Tear down application');
   };
 
   process.on('uncaughtException', function (err) {
-    logger.log('critical', 'Uncaught exception! This may be a bug in nodejs-service-framework');
-    logger.log('critical', 'Uncaught exception: ' + err.stack);
+    log('critical', 'Uncaught exception! This may be a bug in nodejs-service-framework');
+    log('critical', 'Uncaught exception: ' + err.stack);
     tearDownApplication().finally(() => {
       process.exit(1);
     });
@@ -76,8 +79,8 @@ export const InitApplication = (metaData: ApplicationMetaData): void => {
 };
 
 function startApplication(orm: MikroORM | null, metaData: ApplicationMetaData) {
-  logger.log('framework', 'Starting Application ...');
-  logger.log('framework', 'Set default configuration ...');
+  log('framework', 'Starting Application ...');
+  log('framework', 'Set default configuration ...');
 
   const app = express();
 
@@ -90,6 +93,20 @@ function startApplication(orm: MikroORM | null, metaData: ApplicationMetaData) {
     });
   }
 
+  const secretKey = getConfig('security.secretKey');
+
+  if (
+    process.env.NODE_ENV === 'production' &&
+    !getConfig('security.noSecretKey') &&
+    (secretKey === 'notverysecret' || secretKey === '$SECRET_KEY')
+  ) {
+    log(
+      'critical',
+      'No SECRET_KEY specified! Most services need one ( for authentication against user-service. When your service dont need one you can suppress this message by add following configuration: "security.noSecretKey": true'
+    );
+    process.exit(1);
+  }
+
   app.use(bodyParser.json());
   app.use(express.json());
 
@@ -99,7 +116,7 @@ function startApplication(orm: MikroORM | null, metaData: ApplicationMetaData) {
   metaData?.beforeStartMethod(app).then(() => {
     app.use(ErrorHandlerMiddleware);
     app.listen(webserverPort, webserverHost, () => {
-      logger.log('info', `Webserver started on ${webserverHost}:${webserverPort}`);
+      log('info', `Webserver started on ${webserverHost}:${webserverPort}`);
     });
   });
 }

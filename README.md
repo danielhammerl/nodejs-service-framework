@@ -9,7 +9,8 @@ You have to create a /config directory in you project root ( not your source dir
 See more information about config here: https://www.npmjs.com/package/config
 
 An example configuration would be the following:
-```json 
+
+```json
 {
     "webserver": {
         "host": string, // default: localhost
@@ -29,3 +30,9 @@ An example configuration would be the following:
     }
 }
 ```
+
+## Debugging
+
+you can set process.env to TEST_FRAMEWORK to debug some things, for example:
+
+- it makes calls to logging service even its not production environment

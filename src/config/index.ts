@@ -18,6 +18,9 @@ const defaultConfig = {
       },
     ],
   },
+  security: {
+    secretKey: 'notverysecret',
+  },
 };
 
 dotenv.config();
@@ -28,7 +31,7 @@ const fileExtension = '.json';
 const defaultConfigFileName = 'default';
 const nodeEnv = process.env.NODE_ENV;
 
-const readAndParseFile = (filePath: string): Record<string, unknown> | undefined => {
+const readAndParseFile = (filePath: string, ignoreParsingErrors = false): Record<string, unknown> | undefined => {
   try {
     // replace file variables with variables specified in .env
     let fileContent = fs.readFileSync(filePath, 'utf8');
@@ -44,6 +47,9 @@ const readAndParseFile = (filePath: string): Record<string, unknown> | undefined
 
     return JSON.parse(fileContent);
   } catch {
+    if (ignoreParsingErrors) {
+      return {};
+    }
     // eslint-disable-next-line no-console
     console.error('[Critical]', 'Failed to parse config file: ' + filePath);
     process.exit(1);
@@ -55,7 +61,7 @@ const defaultConfigFile: Record<string, unknown> | undefined = readAndParseFile(
 );
 
 const loadedConfigFile: Record<string, unknown> | undefined = nodeEnv
-  ? readAndParseFile(path.resolve(process.cwd(), './config', nodeEnv + fileExtension))
+  ? readAndParseFile(path.resolve(process.cwd(), './config', nodeEnv + fileExtension), true)
   : undefined;
 
 let config: Record<string, unknown> | null = null;
