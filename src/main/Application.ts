@@ -49,30 +49,30 @@ export const InitApplication = (metaData: ApplicationMetaData): void => {
     startApplication(null, metaData);
   }
 
-  const tearDownApplication = async () => {
-    log('framework', 'Tear down application');
+  const shutdownApplication = async () => {
+    log('framework', 'Shutdown application');
   };
 
   process.on('uncaughtException', function (err) {
     log('critical', 'Uncaught exception! This may be a bug in nodejs-service-framework');
     log('critical', 'Uncaught exception: ' + err.stack);
-    tearDownApplication().finally(() => {
+    shutdownApplication().finally(() => {
       process.exit(1);
     });
   });
 
   process.on('SIGINT', () => {
-    tearDownApplication().finally(() => {
+    shutdownApplication().finally(() => {
       process.exit(0);
     });
   });
   process.on('SIGTERM', () => {
-    tearDownApplication().finally(() => {
+    shutdownApplication().finally(() => {
       process.exit(0);
     });
   });
   process.on('SIGQUIT', () => {
-    tearDownApplication().finally(() => {
+    shutdownApplication().finally(() => {
       process.exit(0);
     });
   });
