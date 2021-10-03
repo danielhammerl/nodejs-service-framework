@@ -26,6 +26,7 @@
     "lint:all": "npm run lint:fix && npm run lint:types && npm run todo"
   },
   "devDependencies": {
+    "@mikro-orm/cli": "^4.5.9",
     "@types/death": "^1.1.2",
     "@types/express": "^4.17.13",
     "@types/lodash.get": "^4.4.6",
@@ -48,13 +49,13 @@
     "@mikro-orm/core": "^4.5.9",
     "@mikro-orm/mongodb": "^4.5.9",
     "@mikro-orm/mysql": "^4.5.9",
+    "@mikro-orm/mariadb": "^4.5.9",
+    "@mikro-orm/postgresql": "^4.5.9",
+    "@mikro-orm/sqlite": "^4.5.9",
     "express": "^4.17.1",
     "express-async-handler": "^1.1.4"
   },
   "dependencies": {
-    "@mikro-orm/mariadb": "^4.5.9",
-    "@mikro-orm/postgresql": "^4.5.9",
-    "@mikro-orm/sqlite": "^4.5.9",
     "body-parser": "^1.19.0",
     "dotenv": "^10.0.0",
     "lodash.get": "^4.4.2",
