@@ -8,7 +8,7 @@ import tcpPortUsed from 'tcp-port-used';
 export const getFreePortFromConfig = async (config: number | number[]): Promise<number> => {
   if (Array.isArray(config)) {
     for (let index = 0; index < config.length; index++) {
-      if (await tcpPortUsed.check(config[index])) {
+      if (!(await tcpPortUsed.check(config[index]))) {
         return config[index];
       }
     }
@@ -16,9 +16,8 @@ export const getFreePortFromConfig = async (config: number | number[]): Promise<
     return 0;
   } else {
     if (await tcpPortUsed.check(config)) {
-      return config;
+      return 0;
     }
-
-    return 0;
+    return config;
   }
 };
