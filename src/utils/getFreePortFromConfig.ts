@@ -15,6 +15,10 @@ export const getFreePortFromConfig = async (config: number | number[]): Promise<
 
     return 0;
   } else {
-    return (await tcpPortUsed.check(config)) ? config : 0;
+    if (await tcpPortUsed.check(config)) {
+      return config;
+    }
+
+    return 0;
   }
 };
