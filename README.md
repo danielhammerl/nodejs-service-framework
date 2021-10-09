@@ -14,7 +14,7 @@ An example configuration would be the following:
 {
     "webserver": {
         "host": string, // default: localhost
-        "port": number, // default: 8080
+        "port": number | number[], // default: 8080
     },
     "database": {
         "type": string, // see mikroorm for supported types ( https://mikro-orm.io/docs/configuration/#driver )

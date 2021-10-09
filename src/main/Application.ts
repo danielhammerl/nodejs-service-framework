@@ -8,6 +8,7 @@ import { initLogging, log } from '../logging';
 import { getConfig } from '../config';
 import ErrorHandlerMiddleware from '../middleware/ErrorHandlerMiddleware';
 import { setServiceName } from '../internal/serviceName';
+import { getFreePortFromConfig } from '../utils/getFreePortFromConfig';
 
 export interface ApplicationMetaData {
   mikroOrmEntities?: MikroORMOptions['entities'];
@@ -53,6 +54,7 @@ export const InitApplication = (metaData: ApplicationMetaData): void => {
     log('framework', 'Shutdown application');
   };
 
+  // TODO handle exception in express when port is already in use
   process.on('uncaughtException', function (err) {
     log('critical', 'Uncaught exception! This may be a bug in nodejs-service-framework');
     log('critical', 'Uncaught exception: ' + err.stack);
@@ -78,13 +80,17 @@ export const InitApplication = (metaData: ApplicationMetaData): void => {
   });
 };
 
-function startApplication(orm: MikroORM | null, metaData: ApplicationMetaData) {
+async function startApplication(orm: MikroORM | null, metaData: ApplicationMetaData) {
   log('framework', 'Starting Application ...');
   log('framework', 'Set default configuration ...');
 
   const app = express();
 
-  const webserverPort = getConfig<number>('webserver.port');
+  const webserverPort = await getFreePortFromConfig(getConfig<number | number[]>('webserver.port'));
+  if (webserverPort === 0) {
+    log('critical', 'Port(s) already in use');
+    process.exit(1);
+  }
   const webserverHost = getConfig<string>('webserver.host');
 
   if (orm) {
