@@ -3,3 +3,4 @@ export { getOrm } from './database/getORM';
 export { getConfig } from './config';
 export { winstonLogLevel } from './logging/logLevels';
 export { log } from './logging';
+export * from './types';

@@ -7,7 +7,7 @@ import { paramCase } from 'change-case';
 import { _initOrm } from '../database/getORM';
 import { initLogging, log } from '../logging';
 import { getConfig } from '../config';
-import ErrorHandlerMiddleware from '../middleware/ErrorHandlerMiddleware';
+import { ErrorHandler } from '../middleware/ErrorHandlerMiddleware';
 import { setServiceName } from '../internal/serviceName';
 import { getFreePortFromConfig } from '../utils/getFreePortFromConfig';
 
@@ -124,7 +124,7 @@ async function startApplication(orm: MikroORM | null, metaData: ApplicationMetaD
 
   // TODO add catch
   metaData?.beforeStartMethod(app).then(() => {
-    app.use(ErrorHandlerMiddleware);
+    app.use(ErrorHandler);
     app.listen(webserverPort, webserverHost, () => {
       log('info', `Webserver started on ${webserverHost}:${webserverPort}`);
     });
