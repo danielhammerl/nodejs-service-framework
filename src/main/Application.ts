@@ -2,6 +2,7 @@ import express, { Express } from 'express';
 import bodyParser from 'body-parser';
 import { MikroORMOptions } from '@mikro-orm/core/utils/Configuration';
 import { MikroORM, RequestContext } from '@mikro-orm/core';
+import { paramCase } from 'change-case';
 
 import { _initOrm } from '../database/getORM';
 import { initLogging, log } from '../logging';
@@ -23,6 +24,8 @@ export interface ApplicationMetaData {
  * @constructor
  */
 export const InitApplication = (metaData: ApplicationMetaData): void => {
+  process.title = paramCase(metaData.serviceName);
+
   setServiceName(metaData.serviceName);
   initLogging(metaData.serviceName);
   const useDatabase = !!getConfig('database');
