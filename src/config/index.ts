@@ -91,9 +91,9 @@ config = customMergeOptions(customMergeOptions(defaultConfig ?? {}, defaultConfi
 // with this beautiful method overload, we make ts safe that we always have a value and not undefined,
 // if we access a config key which is present in the defaultConfig
 
-function getConfig<T extends unknown>(propertyName: DotNestedKeys<typeof defaultConfig>): T;
-function getConfig<T extends unknown>(propertyName: string): T;
-function getConfig<T extends unknown>(propertyName: string): T | undefined {
+function getConfig<T>(propertyName: DotNestedKeys<typeof defaultConfig>): T;
+function getConfig<T>(propertyName: string): T;
+function getConfig<T>(propertyName: string): T | undefined {
   return (_get(config, propertyName) as T) ?? undefined;
 }
 

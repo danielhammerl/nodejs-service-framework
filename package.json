@@ -23,7 +23,8 @@
     "lint:fix": "eslint src/ --fix",
     "lint:types": "tsc --noEmit",
     "todo": "leasot -x 'src/**/*.ts'",
-    "lint:all": "npm run lint:fix && npm run lint:types && npm run todo"
+    "lint:all": "npm run lint:fix && npm run lint:types && npm run todo",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@types/death": "^1.1.2",
@@ -33,15 +34,15 @@
     "@types/node": "^16.10.4",
     "@types/node-fetch": "^2.5.12",
     "@types/tcp-port-used": "^1.0.0",
-    "@typescript-eslint/eslint-plugin": "^4.32.0",
-    "@typescript-eslint/parser": "^4.32.0",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
     "child_process": "1.0.2",
     "cross-env": "^7.0.3",
-    "eslint": "^7.32.0",
-    "eslint-plugin-import": "^2.24.2",
+    "eslint": "^8.0.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-unicorn": "^36.0.0",
+    "eslint-plugin-unicorn": "^37.0.1",
+    "husky": "^7.0.2",
     "leasot": "^12.0.0",
     "prettier": "^2.4.1",
     "typescript": "^4.4.4"
