@@ -1,7 +1,7 @@
 import { ErrorRequestHandler } from 'express';
 import { log } from '../logging';
 
-// eslint-disable-next-line no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const ErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   if (err) {
     const message = err?.message ?? 'Unknown error occurred';

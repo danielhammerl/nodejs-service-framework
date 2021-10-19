@@ -1,7 +1,7 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Handler } from 'express';
 import { AuthenticatedRequest } from '../types';
-import UnauthenticatedException from '../exceptions/UnauthenticatedException';
+import { UnauthenticatedException } from '../exceptions';
 import { getConfig } from '../config';
 import { log } from '../logging';
 

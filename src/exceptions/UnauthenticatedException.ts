@@ -1,4 +1,4 @@
-export default class UnauthenticatedException extends Error {
+export class UnauthenticatedException extends Error {
   constructor() {
     super(`Unauthenticated`);
     this.statusCode = 401;

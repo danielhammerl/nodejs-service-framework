@@ -1,4 +1,4 @@
-export default class ValidationException extends Error {
+export class ValidationException extends Error {
   constructor(err: Error) {
     super(err.message);
     this.statusCode = 400;
