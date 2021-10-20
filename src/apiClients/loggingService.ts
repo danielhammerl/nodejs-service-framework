@@ -1,4 +1,5 @@
 import fetch, { Response } from 'node-fetch';
+import { getConfig } from '../config';
 
 export interface LoggingInformation {
   message: string;
@@ -11,7 +12,7 @@ export const logToLoggingService = async (logProps: LoggingInformation, applicat
   return await fetch(
     process.env.NODE_ENV === 'TEST_FRAMEWORK'
       ? 'https://api.danielhammerl.de/logging-service/'
-      : 'http://localhost:30010/',
+      : getConfig('logging.loggingServiceUrl') ?? 'http://localhost:30010/',
     {
       method: 'POST',
       headers: {
