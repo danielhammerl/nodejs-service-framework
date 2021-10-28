@@ -40,14 +40,14 @@ export const InitApplication = (metaData: ApplicationMetaData): void => {
     log('framework', 'Connecting to database ...');
     _initOrm(metaData?.mikroOrmEntities ?? [])
       .then((orm: MikroORM) => {
-        log('framework', 'Connecting to database ' + orm.config.getClientUrl(true));
+        log('framework', `Connecting to database ${orm.config.getClientUrl(true)}`);
         startApplication(orm, metaData);
       })
       .catch((e) => {
         if (e instanceof Error && e.message.startsWith('Cannot find module ')) {
           log(
             'error',
-            'Cannot find database driver. You have to install the driver on your own. MikroORM exception:\n' + e
+            `Cannot find database driver. You have to install the driver on your own. MikroORM exception:\n${e}`
           );
           return;
         } else {
@@ -62,7 +62,7 @@ export const InitApplication = (metaData: ApplicationMetaData): void => {
   // TODO handle exception in express when port is already in use
   process.on('uncaughtException', function (err) {
     log('critical', 'Uncaught exception! This may be a bug in nodejs-service-framework');
-    log('critical', 'Uncaught exception: ' + err.stack);
+    log('critical', `Uncaught exception: ${err.stack}`);
     exitHandler(1);
   });
 
@@ -89,7 +89,7 @@ async function startApplication(orm: MikroORM | null, metaData: ApplicationMetaD
   const portsFromConfig = getConfig<number | number[]>('webserver.port');
   const webserverPort = await getFreePortFromConfig(portsFromConfig);
   if (webserverPort === 0) {
-    log('critical', 'Port(s) (' + portsFromConfig + ') already in use');
+    log('critical', `Port(s) (${portsFromConfig}) already in use`);
     process.exit(1);
   }
   const webserverHost = getConfig<string>('webserver.host');

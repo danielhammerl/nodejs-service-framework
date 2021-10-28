@@ -41,11 +41,10 @@ const configDirectories: string[] = [
 const configDirectory: string | undefined = configDirectories.find((dir) => fs.existsSync(dir));
 
 if (!configDirectory) {
+  const errorMessagePrefix =
+    'Could not find any config directory. Project configurations must be placed in one of the following directores:';
   // eslint-disable-next-line no-console
-  console.error(
-    'Could not find any config directory. Project configurations must be placed in one of the following directores: ' +
-      configDirectories.join(', ')
-  );
+  console.error(`${errorMessagePrefix} ${configDirectories.join(', ')}`);
   process.exit(1);
 }
 
@@ -69,7 +68,7 @@ const readAndParseFile = (filePath: string, ignoreParsingErrors = false): Record
       return {};
     }
     // eslint-disable-next-line no-console
-    console.error('[Critical]', 'Failed to parse config file: ' + filePath);
+    console.error('[Critical]', `Failed to parse config file: ${filePath}`);
     process.exit(1);
   }
 };

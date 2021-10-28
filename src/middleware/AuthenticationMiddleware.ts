@@ -21,7 +21,7 @@ export const AuthenticationHandler: Handler = (req: AuthenticatedRequest, res, n
   }
 
   if (typeof decoded === 'string') {
-    log('error', 'decoded in Authentication.ts seems to be a string with value: ' + decoded);
+    log('error', `decoded in Authentication.ts seems to be a string with value: ${decoded}`);
     throw new UnauthenticatedException();
   }
 

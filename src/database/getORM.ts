@@ -26,7 +26,7 @@ export const _initOrm = async (entities: MikroORMOptions['entities']): Promise<M
   }
 };
 
-export const getOrm = async (): Promise<MikroORM> => {
+export const getOrm = (): MikroORM => {
   if (orm) {
     return orm;
   }
