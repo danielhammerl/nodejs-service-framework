@@ -25,8 +25,6 @@ const defaultConfig = {
 
 dotenv.config();
 
-// TODO add overwrite by env variable
-
 const fileExtension = '.json';
 const defaultConfigFileName = 'default';
 const nodeEnv = process.env.NODE_ENV;
