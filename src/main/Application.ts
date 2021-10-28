@@ -16,6 +16,12 @@ export interface ApplicationMetaData {
   beforeStartMethod: (app: Express) => Promise<void>;
   serviceName: string;
 }
+
+const exitHandler = (exitCode: number) => {
+  log('framework', 'Shutdown application');
+  process.exit(exitCode);
+};
+
 // TODO config system testen
 // TODO Documentation
 /**
@@ -53,33 +59,24 @@ export const InitApplication = (metaData: ApplicationMetaData): void => {
     startApplication(null, metaData);
   }
 
-  const shutdownApplication = async () => {
-    log('framework', 'Shutdown application');
-  };
-
   // TODO handle exception in express when port is already in use
   process.on('uncaughtException', function (err) {
     log('critical', 'Uncaught exception! This may be a bug in nodejs-service-framework');
     log('critical', 'Uncaught exception: ' + err.stack);
-    shutdownApplication().finally(() => {
-      process.exit(1);
-    });
+    exitHandler(1);
   });
 
   process.on('SIGINT', () => {
-    shutdownApplication().finally(() => {
-      process.exit(0);
-    });
+    exitHandler(0);
   });
   process.on('SIGTERM', () => {
-    shutdownApplication().finally(() => {
-      process.exit(0);
-    });
+    exitHandler(0);
   });
   process.on('SIGQUIT', () => {
-    shutdownApplication().finally(() => {
-      process.exit(0);
-    });
+    exitHandler(0);
+  });
+  process.on('SIGKILL', () => {
+    exitHandler(0);
   });
 };
 
