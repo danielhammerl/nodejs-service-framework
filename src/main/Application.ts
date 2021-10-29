@@ -75,9 +75,6 @@ export const InitApplication = (metaData: ApplicationMetaData): void => {
   process.on('SIGQUIT', () => {
     exitHandler(0);
   });
-  process.on('SIGKILL', () => {
-    exitHandler(0);
-  });
 };
 
 async function startApplication(orm: MikroORM | null, metaData: ApplicationMetaData) {
