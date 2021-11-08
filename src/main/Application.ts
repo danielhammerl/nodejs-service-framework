@@ -15,12 +15,8 @@ export interface ApplicationMetaData {
   mikroOrmEntities?: MikroORMOptions['entities'];
   beforeStartMethod: (app: Express) => Promise<void>;
   serviceName: string;
+  exitHandler?: () => Promise<void>;
 }
-
-const exitHandler = (exitCode: number) => {
-  log('framework', 'Shutdown application');
-  process.exit(exitCode);
-};
 
 // TODO config system testen
 // TODO Documentation
@@ -34,6 +30,12 @@ export const InitApplication = (metaData: ApplicationMetaData): void => {
 
   setServiceName(metaData.serviceName);
   initLogging(metaData.serviceName);
+
+  const exitHandler = (exitCode: number) => {
+    log('framework', 'Shutdown application');
+    process.exit(exitCode);
+  };
+
   const useDatabase = !!getConfig('database');
 
   if (useDatabase) {
