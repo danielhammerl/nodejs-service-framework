@@ -1,11 +1,11 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import { Handler } from 'express';
-import { AuthenticatedRequest } from '../types';
+import { Handler, Request } from 'express';
 import { UnauthenticatedException } from '../exceptions';
 import { getConfig } from '../config';
 import { log } from '../logging';
+import { AuthenticatedRequest } from '../types';
 
-export const AuthenticationHandler: Handler = (req: AuthenticatedRequest, res, next) => {
+export const AuthenticationHandler: Handler = (req: Request, res, next) => {
   if (typeof req.headers?.authorization !== 'string') {
     throw new UnauthenticatedException();
   }
@@ -25,6 +25,7 @@ export const AuthenticationHandler: Handler = (req: AuthenticatedRequest, res, n
     throw new UnauthenticatedException();
   }
 
-  req.permissions = decoded.permissions ?? [];
+  (req as AuthenticatedRequest).permissions = decoded.permissions ?? [];
+  (req as AuthenticatedRequest).userId = decoded.userid;
   next();
 };
