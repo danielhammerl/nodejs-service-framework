@@ -2,6 +2,6 @@ import { Request } from 'express';
 import { Permission } from './permission';
 
 export type AuthenticatedRequest = Request & {
-  id?: string;
+  userId?: string;
   permissions?: Permission[];
 };
