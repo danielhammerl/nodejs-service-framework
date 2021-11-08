@@ -80,7 +80,7 @@ export const InitApplication = (metaData: ApplicationMetaData): void => {
 };
 
 async function startApplication(orm: MikroORM | null, metaData: ApplicationMetaData) {
-  log('framework', 'Starting Application ...');
+  log('framework', `Starting Application with Profile ${process.env.NODE_ENV ?? 'None'} ...`);
   log('framework', 'Set default configuration ...');
 
   const app = express();
