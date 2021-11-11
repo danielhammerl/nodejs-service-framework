@@ -1,9 +1,9 @@
-import winston from 'winston';
+import winston, { format } from 'winston';
 import { logLevelColors, logLevels, winstonLogLevel } from './logLevels';
 import { TransformableInfo } from 'logform';
 import { findLongestStringInArray, nonNullable } from '../utils/array';
 import { getConfig } from '../config';
-import { InvalidConfigurationException } from '../exceptions/InvalidConfigurationException';
+import { InvalidConfigurationException } from '../exceptions';
 import { LoggingServiceTransport } from './LoggingServiceTransport';
 
 let logger: winston.Logger | null = null;
@@ -32,7 +32,8 @@ export const initLogging = (serviceName: string): void => {
   // [FRAMEWORK]  x
   const formatLogLevel = (level: string): string => {
     const longestLogLevelName = findLongestStringInArray(Object.keys(winstonLogLevel));
-    const lengthDiffBetweenLogLevelAndLongestLogLevel = longestLogLevelName.length - level.length;
+    // +10 because of the additional signs for colorizing
+    const lengthDiffBetweenLogLevelAndLongestLogLevel = longestLogLevelName.length + 10 - level.length;
     const whiteSpaces = new Array(lengthDiffBetweenLogLevelAndLongestLogLevel + 2).join(' ');
     return `[${level.toUpperCase()}]${whiteSpaces}`;
   };
@@ -44,6 +45,10 @@ export const initLogging = (serviceName: string): void => {
   logger = winston.createLogger({
     levels: winstonLogLevel,
     format: winston.format.combine(
+      format((info) => {
+        info.level = info.level.toUpperCase();
+        return info;
+      })(),
       winston.format.colorize({ colors: logLevelColors }),
       winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS ZZ' }),
       winston.format.printf(templateFunction)
