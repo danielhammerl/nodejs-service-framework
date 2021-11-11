@@ -10,12 +10,14 @@ import { getConfig } from '../config';
 import { ErrorHandler } from '../middleware/ErrorHandlerMiddleware';
 import { setServiceName } from '../internal/serviceName';
 import { getFreePortFromConfig } from '../utils/getFreePortFromConfig';
+import { connectToServiceRegistry } from '../apiClients/serviceRegistry';
 
 export interface ApplicationMetaData {
   mikroOrmEntities?: MikroORMOptions['entities'];
   beforeStartMethod: (app: Express) => Promise<void>;
   serviceName: string;
   exitHandler?: () => Promise<void>;
+  connectToServiceRegistry?: boolean;
 }
 
 // TODO config system testen
@@ -92,6 +94,19 @@ async function startApplication(orm: MikroORM | null, metaData: ApplicationMetaD
     process.exit(1);
   }
   const webserverHost = getConfig<string>('webserver.host');
+
+  if (metaData.connectToServiceRegistry) {
+    const serviceRegistryResult = await connectToServiceRegistry({
+      serviceName: metaData.serviceName,
+      servicePort: webserverPort,
+    });
+
+    if (serviceRegistryResult?.status === 200) {
+      log('info', 'Connected to service registry');
+    } else if (serviceRegistryResult) {
+      log('warning', 'Could not connect to service registry');
+    }
+  }
 
   if (orm) {
     app.use((req, res, next) => {
