@@ -2,7 +2,8 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "strict": true,
-    "target": "es5",
+    "target": "es6",
+    "moduleResolution": "node",
     "lib": ["es2021"],
     "allowJs": true,
     "skipLibCheck": true,

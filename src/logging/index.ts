@@ -33,8 +33,8 @@ export const initLogging = (serviceName: string): void => {
   const formatLogLevel = (level: string): string => {
     const longestLogLevelName = findLongestStringInArray(Object.keys(winstonLogLevel));
     const lengthDiffBetweenLogLevelAndLongestLogLevel = longestLogLevelName.length - level.length;
-
-    return `[${level.toUpperCase()}]${new Array(lengthDiffBetweenLogLevelAndLongestLogLevel + 2).join(' ')}`;
+    const whiteSpaces = new Array(lengthDiffBetweenLogLevelAndLongestLogLevel + 2).join(' ');
+    return `[${level.toUpperCase()}]${whiteSpaces}`;
   };
 
   const templateFunction = (info: TransformableInfo): string => {
