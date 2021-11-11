@@ -9,9 +9,6 @@ import { LoggingServiceTransport } from './LoggingServiceTransport';
 let logger: winston.Logger | null = null;
 
 export const initLogging = (serviceName: string): void => {
-  // TODO farben funktionieren noch nicht
-  winston.addColors(logLevelColors);
-
   const getLoggingTransports = (): winston.transport[] => {
     const loggingConfiguration = getConfig<{ type: 'console'; level: logLevels }[]>('logging.transports') ?? [];
     return [
@@ -47,9 +44,9 @@ export const initLogging = (serviceName: string): void => {
   logger = winston.createLogger({
     levels: winstonLogLevel,
     format: winston.format.combine(
+      winston.format.colorize({ colors: logLevelColors }),
       winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS ZZ' }),
-      winston.format.printf(templateFunction),
-      winston.format.colorize()
+      winston.format.printf(templateFunction)
     ),
     transports: getLoggingTransports(),
   });
