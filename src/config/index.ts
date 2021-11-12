@@ -40,7 +40,7 @@ const configDirectory: string | undefined = configDirectories.find((dir) => fs.e
 
 if (!configDirectory) {
   const errorMessagePrefix =
-    'Could not find any config directory. Project configurations must be placed in one of the following directores:';
+    'Could not find any config directory. Project configurations must be placed in one of the following directories:';
   // eslint-disable-next-line no-console
   console.error(`${errorMessagePrefix} ${configDirectories.join(', ')}`);
   process.exit(1);
