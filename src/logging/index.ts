@@ -35,7 +35,7 @@ export const initLogging = (serviceName: string): void => {
     // +10 because of the additional signs for colorizing
     const lengthDiffBetweenLogLevelAndLongestLogLevel = longestLogLevelName.length + 10 - level.length;
     const whiteSpaces = new Array(lengthDiffBetweenLogLevelAndLongestLogLevel + 2).join(' ');
-    return `[${level.toUpperCase()}]${whiteSpaces}`;
+    return `[${level}]${whiteSpaces}`;
   };
 
   const templateFunction = (info: TransformableInfo): string => {
