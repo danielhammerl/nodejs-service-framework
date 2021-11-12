@@ -8,8 +8,8 @@ let orm: MikroORM | null = null;
 export const _initOrm = async (entities: MikroORMOptions['entities']): Promise<MikroORM> => {
   const databaseConfig = getConfig<{ type: 'mysql'; url: string }>('database');
   if (!databaseConfig) {
-    // TODO error handling
-    throw new Error('database is not configured correctly');
+    log('critical', 'database is not configured correctly');
+    process.exit(1);
   }
 
   // TODO what if we pass the wrong db type as config?
@@ -21,8 +21,8 @@ export const _initOrm = async (entities: MikroORMOptions['entities']): Promise<M
     });
     return orm;
   } catch (e) {
-    log('error', 'Failed initializing database connection');
-    throw e;
+    log('critical', 'Failed initializing database connection', e as Error);
+    process.exit(1);
   }
 };
 
