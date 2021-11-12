@@ -26,6 +26,6 @@ export const AuthenticationHandler: Handler = (req: Request, res, next) => {
   }
 
   (req as AuthenticatedRequest).permissions = decoded.permissions ?? [];
-  (req as AuthenticatedRequest).userId = decoded.userid;
+  (req as AuthenticatedRequest).userId = decoded.userId;
   next();
 };
