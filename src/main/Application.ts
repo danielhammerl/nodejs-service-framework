@@ -84,7 +84,6 @@ export const InitApplication = (metaData: ApplicationMetaData): void => {
 
 async function startApplication(orm: MikroORM | null, metaData: ApplicationMetaData) {
   log('framework', `Starting Application with Profile ${getEnvironment() ?? 'None'} ...`);
-  log('framework', 'Set default configuration ...');
 
   const app = express();
 
@@ -104,7 +103,12 @@ async function startApplication(orm: MikroORM | null, metaData: ApplicationMetaD
       });
 
       if (serviceRegistryResult?.status === 200) {
-        log('info', 'Connected to service registry');
+        const body = await serviceRegistryResult.json();
+        if (body.connected === true) {
+          log('info', 'Connected to service registry');
+        } else {
+          log('error', 'Unexpected response from service registry');
+        }
       } else if (serviceRegistryResult) {
         log('error', 'Could not connect to service registry', {
           metadata: {
