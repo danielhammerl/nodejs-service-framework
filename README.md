@@ -16,6 +16,9 @@ An example configuration would be the following:
         "host": string, // default: localhost
         "port": number | number[], // default: 8080
     },
+    "serviceRegistry": {
+        "forceConnect": boolean // forcing connection to service registry, if its false connection will only be etablished on production ( default is false )  
+    }, 
     "database": {
         "type": string, // see mikroorm for supported types ( https://mikro-orm.io/docs/configuration/#driver )
         "url": string, // for example mysql://root:@localhost/test
