@@ -103,10 +103,14 @@ async function startApplication(orm: MikroORM | null, metaData: ApplicationMetaD
       });
 
       if (serviceRegistryResult?.status === 200) {
-        const body = await serviceRegistryResult.json();
-        if (body.connected === true) {
-          log('info', 'Connected to service registry');
-        } else {
+        try {
+          const body = await serviceRegistryResult.json();
+          if (body.connected === true) {
+            log('info', 'Connected to service registry');
+          } else {
+            log('error', 'Unexpected response from service registry');
+          }
+        } catch {
           log('error', 'Unexpected response from service registry');
         }
       } else if (serviceRegistryResult) {
