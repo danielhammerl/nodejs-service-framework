@@ -152,7 +152,7 @@ async function startApplication(orm: MikroORM | null, metaData: ApplicationMetaD
   app.use(bodyParser.json());
   app.use(express.json());
 
-  if (metaData.hasHealthEndpoint === false) {
+  if (metaData.hasHealthEndpoint === true) {
     app.get('/health', (req, res) => res.status(200).send(metaData.serviceName));
   }
 
