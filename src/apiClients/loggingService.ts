@@ -1,5 +1,6 @@
 import fetch, { Response } from 'node-fetch';
 import { getConfig } from '../config';
+import { getEnvironment } from '../utils/getEnvironment';
 
 export interface LoggingInformation {
   message: string;
@@ -10,7 +11,7 @@ export interface LoggingInformation {
 export const logToLoggingService = async (logProps: LoggingInformation, application: string): Promise<Response> => {
   // TODO url to service discovery?
   return await fetch(
-    process.env.NODE_ENV === 'TEST_FRAMEWORK'
+    getEnvironment() === 'test_framework'
       ? 'https://api.danielhammerl.de/logging-service/'
       : getConfig('logging.loggingServiceUrl') ?? 'http://localhost:30010/',
     {

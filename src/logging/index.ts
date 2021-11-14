@@ -5,6 +5,7 @@ import { findLongestStringInArray, nonNullable } from '../utils/array';
 import { getConfig } from '../config';
 import { InvalidConfigurationException } from '../exceptions';
 import { LoggingServiceTransport } from './LoggingServiceTransport';
+import { getEnvironment } from '../utils/getEnvironment';
 
 let logger: winston.Logger | null = null;
 
@@ -19,7 +20,7 @@ export const initLogging = (serviceName: string): void => {
         throw new InvalidConfigurationException(`logging.transports[${index}].type`);
       }),
       // error and critical will be logged to logging-service on production environments
-      process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'TEST_FRAMEWORK'
+      getEnvironment() === 'production' || getEnvironment() === 'test_framework'
         ? new LoggingServiceTransport(serviceName, { level: 'error' })
         : null,
     ].filter(nonNullable);

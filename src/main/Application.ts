@@ -11,6 +11,7 @@ import { ErrorHandler } from '../middleware/ErrorHandlerMiddleware';
 import { setServiceName } from '../internal/serviceName';
 import { getFreePortFromConfig } from '../utils/getFreePortFromConfig';
 import { connectToServiceRegistry } from '../apiClients/serviceRegistry';
+import { getEnvironment } from '../utils/getEnvironment';
 
 export interface ApplicationMetaData {
   mikroOrmEntities?: MikroORMOptions['entities'];
@@ -82,7 +83,7 @@ export const InitApplication = (metaData: ApplicationMetaData): void => {
 };
 
 async function startApplication(orm: MikroORM | null, metaData: ApplicationMetaData) {
-  log('framework', `Starting Application with Profile ${process.env.NODE_ENV ?? 'None'} ...`);
+  log('framework', `Starting Application with Profile ${getEnvironment() ?? 'None'} ...`);
   log('framework', 'Set default configuration ...');
 
   const app = express();
@@ -128,7 +129,7 @@ async function startApplication(orm: MikroORM | null, metaData: ApplicationMetaD
   const secretKey = getConfig('security.secretKey');
 
   if (
-    process.env.NODE_ENV === 'production' &&
+    getEnvironment() === 'production' &&
     !getConfig('security.noSecretKey') &&
     (secretKey === 'notverysecret' || secretKey === '$SECRET_KEY')
   ) {

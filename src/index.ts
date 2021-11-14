@@ -9,5 +9,6 @@ export * from './types';
 export * from './exceptions';
 export { AuthenticationHandler } from './middleware/AuthenticationMiddleware';
 export { ServiceRegistryData } from './apiClients/serviceRegistry';
+export { getEnvironment } from './utils/getEnvironment';
 
 export type App = Express;

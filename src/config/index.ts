@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import mergeOptions from 'merge-options';
 import _get from 'lodash.get';
 import { DotNestedKeys } from '../utils/types';
+import { getEnvironment } from '../utils/getEnvironment';
 
 const defaultConfig = {
   webserver: {
@@ -27,7 +28,7 @@ dotenv.config();
 
 const fileExtension = '.json';
 const defaultConfigFileName = 'default';
-const nodeEnv = process.env.NODE_ENV;
+const nodeEnv = getEnvironment();
 // all possible config directories, ordered by relevance
 const configDirectories: string[] = [
   path.resolve(process.cwd(), './src/config'),

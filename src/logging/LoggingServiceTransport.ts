@@ -1,5 +1,6 @@
 import Transport from 'winston-transport';
 import { logToLoggingService } from '../apiClients/loggingService';
+import { getEnvironment } from '../utils/getEnvironment';
 
 export class LoggingServiceTransport extends Transport {
   constructor(applicationName: string, opts: Transport.TransportStreamOptions) {
@@ -24,7 +25,7 @@ export class LoggingServiceTransport extends Transport {
           console.error('It answered with the following status code: ', result.status);
           // eslint-disable-next-line no-console
           console.error('This dont seem to be good ...');
-        } else if (process.env.NODE_ENV === 'TEST_FRAMEWORK') {
+        } else if (getEnvironment() === 'test_framework') {
           // eslint-disable-next-line no-console
           console.log('Sent logging entry to logging service');
         }
