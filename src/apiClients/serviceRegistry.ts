@@ -2,8 +2,8 @@ import fetch, { Response } from 'node-fetch';
 import { log } from '../logging';
 
 export interface ServiceData {
-  serviceName: string;
-  servicePort: number;
+  applicationName: string;
+  port: number;
 }
 
 export const connectToServiceRegistry = async (serviceData: ServiceData): Promise<Response | void> => {

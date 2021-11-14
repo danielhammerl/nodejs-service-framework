@@ -98,8 +98,8 @@ async function startApplication(orm: MikroORM | null, metaData: ApplicationMetaD
   if (metaData.connectToServiceRegistry) {
     try {
       const serviceRegistryResult = await connectToServiceRegistry({
-        serviceName: metaData.serviceName,
-        servicePort: webserverPort,
+        applicationName: metaData.serviceName,
+        port: webserverPort,
       });
 
       if (serviceRegistryResult?.status === 200) {
