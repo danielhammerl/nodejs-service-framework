@@ -8,5 +8,6 @@ export { log } from './logging';
 export * from './types';
 export * from './exceptions';
 export { AuthenticationHandler } from './middleware/AuthenticationMiddleware';
+export { ServiceRegistryData } from './apiClients/serviceRegistry';
 
 export type App = Express;
