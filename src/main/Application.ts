@@ -19,6 +19,7 @@ export interface ApplicationMetaData {
   serviceName: string;
   exitHandler?: () => Promise<void>;
   connectToServiceRegistry?: boolean;
+  hasHealthEndpoint?: boolean;
 }
 
 // TODO config system testen
@@ -151,7 +152,9 @@ async function startApplication(orm: MikroORM | null, metaData: ApplicationMetaD
   app.use(bodyParser.json());
   app.use(express.json());
 
-  app.get('/health', (req, res) => res.status(200).send(metaData.serviceName));
+  if (metaData.hasHealthEndpoint === false) {
+    app.get('/health', (req, res) => res.status(200).send(metaData.serviceName));
+  }
 
   // TODO add catch
   metaData?.beforeStartMethod(app).then(() => {
