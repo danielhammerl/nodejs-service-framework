@@ -105,7 +105,14 @@ async function startApplication(orm: MikroORM | null, metaData: ApplicationMetaD
       if (serviceRegistryResult?.status === 200) {
         log('info', 'Connected to service registry');
       } else if (serviceRegistryResult) {
-        log('error', 'Could not connect to service registry', { metadata: { serverResponse: serviceRegistryResult } });
+        log('error', 'Could not connect to service registry', {
+          metadata: {
+            serverResponse: {
+              status: serviceRegistryResult.status,
+              body: await serviceRegistryResult.json(),
+            },
+          },
+        });
       }
     } catch (e: unknown) {
       log('error', 'Could not connect to service registry', e as Error);
