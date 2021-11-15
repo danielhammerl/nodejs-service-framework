@@ -10,5 +10,6 @@ export * from './exceptions';
 export { AuthenticationHandler } from './middleware/AuthenticationMiddleware';
 export { ServiceRegistryData } from './apiClients/serviceRegistry';
 export { getEnvironment } from './utils/getEnvironment';
+export { FileDatabase } from './utils/fileDatabase';
 
 export type App = Express;
