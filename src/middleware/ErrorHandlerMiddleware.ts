@@ -9,7 +9,7 @@ export const ErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     const statusCode = err?.statusCode ?? 500;
 
     if (!statusCode || statusCode >= 500) {
-      log('error', message, stack);
+      log('error', message, { stack });
     }
 
     res.status(statusCode || 500).json({
