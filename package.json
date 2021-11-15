@@ -24,7 +24,7 @@
     "lint:types": "tsc --noEmit",
     "todo": "leasot -x 'src/**/*.ts'",
     "lint:all": "npm run lint:fix && npm run lint:types && npm run todo",
-    "prepare": "husky install"
+    "husky:install": "husky install"
   },
   "devDependencies": {
     "@danielhammerl/eslint-config": "^0.0.12",
