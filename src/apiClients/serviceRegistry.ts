@@ -18,6 +18,6 @@ export const connectToServiceRegistry = async (serviceData: ServiceRegistryData)
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(serviceData),
+    body: JSON.stringify({ ...serviceData, password: getConfig('serviceRegistryPassphrase') }),
   });
 };
