@@ -34,7 +34,7 @@ export class FileDatabase<T> {
     }
   }
 
-  public getData(exposeExceptions = false): T | null {
+  public async getData(defaultData: T | null = null, exposeExceptions = false): Promise<T | null> {
     if (fs.existsSync(this.filePath)) {
       const data = JSON.parse(fs.readFileSync(this.filePath).toString());
 
@@ -46,13 +46,18 @@ export class FileDatabase<T> {
           if (exposeExceptions) {
             throw e;
           }
-          return null;
+          return defaultData;
         }
       }
 
       return data;
+    } else {
+      if (defaultData) {
+        await this.saveData(defaultData);
+      }
+      return defaultData;
     }
 
-    return null;
+    return defaultData;
   }
 }
