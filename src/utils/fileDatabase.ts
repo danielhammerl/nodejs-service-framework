@@ -1,5 +1,7 @@
 import fs from 'fs';
 import { BaseSchema } from 'yup';
+import { getServiceName } from '../internal/serviceName';
+import { paramCase } from 'change-case';
 const fsp = fs.promises;
 
 export type GetDataOptions = {
@@ -19,7 +21,7 @@ export class FileDatabase<T> {
   private readonly filePath: string;
   private readonly validationSchema?: BaseSchema;
 
-  constructor(filePath: string, validationSchema?: BaseSchema) {
+  constructor(filePath = `/var/lib/danielhammerl/${paramCase(getServiceName())}`, validationSchema?: BaseSchema) {
     this.filePath = filePath;
     this.validationSchema = validationSchema;
   }
