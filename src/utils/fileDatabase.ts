@@ -2,6 +2,19 @@ import fs from 'fs';
 import { BaseSchema } from 'yup';
 const fsp = fs.promises;
 
+export type GetDataOptions = {
+  exposeExceptions?: boolean;
+
+  /**
+   * when this boolean is true, then getData will save the default data if no data exists
+   */
+  saveDefaultDataOnError?: boolean;
+};
+
+export type SaveDataOption = {
+  exposeExceptions?: boolean;
+};
+
 export class FileDatabase<T> {
   private readonly filePath: string;
   private readonly validationSchema?: BaseSchema;
@@ -11,7 +24,7 @@ export class FileDatabase<T> {
     this.validationSchema = validationSchema;
   }
 
-  public async saveData(data: T, exposeExceptions = false): Promise<boolean> {
+  public async saveData(data: T, { exposeExceptions = false }: SaveDataOption): Promise<boolean> {
     if (this.validationSchema) {
       try {
         this.validationSchema.validateSync(data);
@@ -34,7 +47,10 @@ export class FileDatabase<T> {
     }
   }
 
-  public async getData(defaultData: T | null = null, exposeExceptions = false): Promise<T | null> {
+  public async getData(
+    defaultData: T | null = null,
+    { exposeExceptions = false, saveDefaultDataOnError = false }: GetDataOptions
+  ): Promise<T | null> {
     if (fs.existsSync(this.filePath)) {
       const data = JSON.parse(fs.readFileSync(this.filePath).toString());
 
@@ -52,8 +68,8 @@ export class FileDatabase<T> {
 
       return data;
     } else {
-      if (defaultData) {
-        await this.saveData(defaultData);
+      if (defaultData && saveDefaultDataOnError) {
+        await this.saveData(defaultData, { exposeExceptions });
       }
       return defaultData;
     }
