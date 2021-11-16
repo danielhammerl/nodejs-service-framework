@@ -17,11 +17,19 @@ export type SaveDataOption = {
   exposeExceptions?: boolean;
 };
 
+export type FileDatabaseType = {
+  filePath?: string;
+  validationSchema?: BaseSchema;
+};
+
 export class FileDatabase<T> {
   private readonly filePath: string;
   private readonly validationSchema?: BaseSchema;
 
-  constructor(filePath = `/var/lib/danielhammerl/${paramCase(getServiceName())}`, validationSchema?: BaseSchema) {
+  constructor({
+    filePath = `/var/lib/danielhammerl/${paramCase(getServiceName())}`,
+    validationSchema,
+  }: FileDatabaseType) {
     this.filePath = filePath;
     this.validationSchema = validationSchema;
   }
