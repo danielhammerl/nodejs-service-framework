@@ -1,6 +1,6 @@
 import express, { Express } from 'express';
 import bodyParser from 'body-parser';
-import { MikroORMOptions } from '@mikro-orm/core/utils/Configuration';
+import { MigrationsOptions, MikroORMOptions } from '@mikro-orm/core/utils/Configuration';
 import { MikroORM, RequestContext } from '@mikro-orm/core';
 import { paramCase } from 'change-case';
 
@@ -20,6 +20,7 @@ export interface ApplicationMetaData {
   exitHandler?: () => Promise<void>;
   connectToServiceRegistry?: boolean;
   hasHealthEndpoint?: boolean;
+  mikroOrmMigrationSettings?: MigrationsOptions;
 }
 
 // TODO config system testen
@@ -44,7 +45,7 @@ export const InitApplication = (metaData: ApplicationMetaData): void => {
 
   if (useDatabase) {
     log('framework', 'Connecting to database ...');
-    _initOrm(metaData?.mikroOrmEntities ?? [])
+    _initOrm(metaData?.mikroOrmEntities ?? [], metaData?.mikroOrmMigrationSettings ?? {})
       .then((orm: MikroORM) => {
         log('framework', `Connecting to database ${orm.config.getClientUrl(true)}`);
         startApplication(orm, metaData);
