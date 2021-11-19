@@ -11,6 +11,7 @@ const defaultConfig = {
     port: 8080,
     host: 'localhost',
   },
+  debugMode: false,
   serviceRegistryPassphrase: '$SERVICE_REGISTRY_PASSPHRASE',
   logging: {
     transports: [

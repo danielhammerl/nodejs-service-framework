@@ -16,6 +16,7 @@ An example configuration would be the following:
         "host": string, // default: localhost
         "port": number | number[], // default: 8080
     },
+    "debugMode": boolean // shows stacktraces in console output, default is false
     "serviceRegistry": {
         "forceConnect": boolean // forcing connection to service registry, if its false connection will only be etablished on production ( default is false )  
     }, 

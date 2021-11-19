@@ -40,7 +40,9 @@ export const initLogging = (serviceName: string): void => {
   };
 
   const templateFunction = (info: TransformableInfo): string => {
-    return `${info.timestamp} ${formatLogLevel(info.level)} ${info.message}`;
+    return `${info.timestamp} ${formatLogLevel(info.level)} ${info.message}${
+      getConfig('debugMode') ? info?.stack : ''
+    }`;
   };
 
   logger = winston.createLogger({
