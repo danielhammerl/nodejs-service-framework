@@ -90,13 +90,13 @@ async function startApplication(orm: MikroORM | null, metaData: ApplicationMetaD
     const updateDump = await generator.getUpdateSchemaSQL(false, true, false, false);
 
     if (updateDump.trim().length > 0) {
-      log('framework', `Differences between database and models found: `);
+      log('info', `Differences between database and models found: `);
       log('framework', updateDump);
 
       await generator.updateSchema();
-      log('framework', updateDump);
+      log('info', `Differences applied`);
     } else {
-      log('framework', `Differences applied`);
+      log('framework', `No Differences found`);
     }
   }
 
