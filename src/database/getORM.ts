@@ -5,10 +5,7 @@ import { log } from '../logging';
 
 let orm: MikroORM | null = null;
 
-export const _initOrm = async (
-  entities: MikroORMOptions['entities'],
-  mikroOrmMigrationSettings: MikroORMOptions['migrations']
-): Promise<MikroORM> => {
+export const _initOrm = async (entities: MikroORMOptions['entities']): Promise<MikroORM> => {
   const databaseConfig = getConfig<{ type: 'mysql'; url: string }>('database');
   if (!databaseConfig) {
     log('critical', 'database is not configured correctly');
@@ -21,7 +18,6 @@ export const _initOrm = async (
       type: databaseConfig.type,
       clientUrl: databaseConfig.url,
       entities,
-      migrations: mikroOrmMigrationSettings,
     });
     return orm;
   } catch (e) {
