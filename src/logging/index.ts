@@ -40,9 +40,12 @@ export const initLogging = (serviceName: string): void => {
   };
 
   const templateFunction = (info: TransformableInfo): string => {
-    return `${info.timestamp} ${formatLogLevel(info.level)} ${info.message}${
-      getConfig('debugMode') ? info?.stack : ''
-    }`;
+    let message = `${info.timestamp} ${formatLogLevel(info.level)} ${info.message}`;
+    if (getConfig('debugMode') && info?.stack) {
+      // eslint-disable-next-line prefer-template
+      message += '\n' + info.stack;
+    }
+    return message;
   };
 
   logger = winston.createLogger({
