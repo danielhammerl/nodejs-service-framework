@@ -104,7 +104,7 @@ async function startApplication(orm: MikroORM | null, metaData: ApplicationMetaD
 
   const app = express();
 
-  const portsFromConfig = getConfig<number | number[]>('webserver.port');
+  const portsFromConfig = getConfig<number | number[] | undefined>('webserver.port');
   const webserverPort = await getFreePortFromConfig(portsFromConfig);
   if (webserverPort === 0) {
     log('critical', `Port(s) (${portsFromConfig}) already in use`);

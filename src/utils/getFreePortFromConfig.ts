@@ -1,11 +1,12 @@
 import tcpPortUsed from 'tcp-port-used';
+import { getRandomNumber } from './randomNumber';
 
 /**
  * receives one or multiple ports and return the ( first ) port which is free and not already in use,
  * if there isnt any free port, returns 0;
  * @param config
  */
-export const getFreePortFromConfig = async (config: number | number[]): Promise<number> => {
+export const getFreePortFromConfig = async (config: number | number[] | undefined): Promise<number> => {
   if (Array.isArray(config)) {
     for (let index = 0; index < config.length; index++) {
       if (!(await tcpPortUsed.check(config[index]))) {
@@ -14,10 +15,16 @@ export const getFreePortFromConfig = async (config: number | number[]): Promise<
     }
 
     return 0;
-  } else {
+  } else if (typeof config === 'number') {
     if (await tcpPortUsed.check(config)) {
       return 0;
     }
     return config;
+  } else {
+    let number: number | undefined;
+    do {
+      number = getRandomNumber(30000, 40000);
+    } while (!(await tcpPortUsed.check(number)));
+    return number;
   }
 };

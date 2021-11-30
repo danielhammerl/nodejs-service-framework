@@ -8,7 +8,6 @@ import { getEnvironment } from '../utils/getEnvironment';
 
 const defaultConfig = {
   webserver: {
-    port: 8080,
     host: 'localhost',
   },
   debugMode: false,
