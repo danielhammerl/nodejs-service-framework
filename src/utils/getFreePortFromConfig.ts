@@ -24,7 +24,7 @@ export const getFreePortFromConfig = async (config: number | number[] | undefine
     let number: number | undefined;
     do {
       number = getRandomNumber(30000, 40000);
-    } while (!(await tcpPortUsed.check(number)));
+    } while (await tcpPortUsed.check(number));
     return number;
   }
 };
