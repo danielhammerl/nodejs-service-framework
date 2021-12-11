@@ -8,9 +8,9 @@ export interface LoggingInformation {
   metadata?: unknown;
 }
 
-export const logToLoggingService = async (logProps: LoggingInformation, application: string): Promise<Response> => {
+export const logToLoggingService = (logProps: LoggingInformation, application: string): Promise<Response> => {
   // TODO url to service discovery?
-  return await fetch(
+  return fetch(
     getEnvironment() === 'test_framework'
       ? 'https://api.danielhammerl.de/logging-service/'
       : getConfig('logging.loggingServiceUrl') ?? 'http://localhost:30000/logging-service/',

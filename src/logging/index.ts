@@ -4,12 +4,13 @@ import { TransformableInfo } from 'logform';
 import { findLongestStringInArray, nonNullable } from '../utils/array';
 import { getConfig } from '../config';
 import { InvalidConfigurationException } from '../exceptions';
-import { LoggingServiceTransport } from './LoggingServiceTransport';
+import { logToLoggingService } from '../apiClients/loggingService';
+import { getServiceName } from '../internal/serviceName';
 import { getEnvironment } from '../utils/getEnvironment';
 
 let logger: winston.Logger | null = null;
 
-export const initLogging = (serviceName: string): void => {
+export const initLogging = (): void => {
   const getLoggingTransports = (): winston.transport[] => {
     const loggingConfiguration = getConfig<{ type: 'console'; level: logLevels }[]>('logging.transports') ?? [];
     return [
@@ -19,10 +20,6 @@ export const initLogging = (serviceName: string): void => {
         }
         throw new InvalidConfigurationException(`logging.transports[${index}].type`);
       }),
-      // error and critical will be logged to logging-service on production environments
-      getEnvironment() === 'production' || getEnvironment() === 'test_framework'
-        ? new LoggingServiceTransport(serviceName, { level: 'error' })
-        : null,
     ].filter(nonNullable);
   };
 
@@ -64,11 +61,15 @@ export const initLogging = (serviceName: string): void => {
 };
 
 interface additionalLogParams {
-  stack?: unknown;
-  metadata?: unknown;
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  stack?: any;
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  metadata?: any;
 }
 
-export const log = (logLevel: logLevels, message: string, params?: additionalLogParams): void => {
+function log(logLevel: 'critical', message: string, params?: additionalLogParams): never;
+function log(logLevel: logLevels, message: string, params?: additionalLogParams): void;
+function log(logLevel: logLevels, message: string, params?: additionalLogParams): void {
   if (!logger) {
     // eslint-disable-next-line no-console
     console.error(
@@ -76,5 +77,41 @@ export const log = (logLevel: logLevels, message: string, params?: additionalLog
     );
     return;
   }
+
   logger.log(logLevel, message, params);
-};
+
+  if (logLevel === 'critical') {
+    if (getEnvironment() === 'production' || getEnvironment() === 'test_framework') {
+      try {
+        logToLoggingService(
+          { message, stack: params?.stack?.toString(), metadata: params?.metadata?.toString() },
+          getServiceName()
+        )
+          .then(() => {
+            process.exit(1);
+          })
+          .catch(() => {
+            process.exit(1);
+          })
+          .finally(() => {
+            process.exit(1);
+          });
+      } catch (err) {
+        process.exit(1);
+      }
+    } else {
+      process.exit(1);
+    }
+  } else {
+    if (logLevel === 'error') {
+      if (getEnvironment() === 'production' || getEnvironment() === 'test_framework') {
+        logToLoggingService(
+          { message, stack: params?.stack?.toString(), metadata: params?.metadata?.toString() },
+          getServiceName()
+        );
+      }
+    }
+  }
+}
+
+export { log };

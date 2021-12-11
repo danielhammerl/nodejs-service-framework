@@ -33,7 +33,7 @@ export const InitApplication = (metaData: ApplicationMetaData): void => {
   process.title = paramCase(metaData.serviceName);
 
   setServiceName(metaData.serviceName);
-  initLogging(metaData.serviceName);
+  initLogging();
 
   const exitHandler = (exitCode: number) => {
     log('framework', 'Shutdown application');
@@ -67,9 +67,7 @@ export const InitApplication = (metaData: ApplicationMetaData): void => {
 
   // TODO handle exception in express when port is already in use
   process.on('uncaughtException', function (err) {
-    log('critical', 'Uncaught exception! This may be a bug in nodejs-service-framework');
-    log('critical', `Uncaught exception: ${err.stack}`);
-    exitHandler(1);
+    log('critical', 'Uncaught exception! This may be a bug in nodejs-service-framework', err);
   });
 
   process.on('SIGINT', () => {
@@ -108,7 +106,6 @@ async function startApplication(orm: MikroORM | null, metaData: ApplicationMetaD
   const webserverPort = await getFreePortFromConfig(portsFromConfig);
   if (webserverPort === 0) {
     log('critical', `Port(s) (${portsFromConfig}) already in use`);
-    process.exit(1);
   }
   const webserverHost = getConfig<string>('webserver.host');
 
@@ -162,7 +159,6 @@ async function startApplication(orm: MikroORM | null, metaData: ApplicationMetaD
       'critical',
       'No SECRET_KEY specified! Most services need one (for authentication against user-service). When your service dont need one you can suppress this message by add following configuration: "security.noSecretKey": true'
     );
-    process.exit(1);
   }
 
   app.use(bodyParser.json());
