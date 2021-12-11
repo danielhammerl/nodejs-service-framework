@@ -1,8 +1,9 @@
 import fs from 'fs';
 import { BaseSchema } from 'yup';
-import { getServiceName } from '../internal/serviceName';
+import { getServiceName, getServiceNameUnsafe } from '../internal/serviceName';
 import { paramCase } from 'change-case';
 const fsp = fs.promises;
+import EventEmitter from 'events';
 
 export type GetDataOptions = {
   exposeExceptions?: boolean;
@@ -23,18 +24,29 @@ export type FileDatabaseType = {
 };
 
 export class FileDatabase<T> {
-  private readonly filePath: string;
+  private filePath: string | null;
   private readonly validationSchema?: BaseSchema;
 
-  constructor({
-    filePath = `/var/lib/danielhammerl/${paramCase(getServiceName())}`,
-    validationSchema,
-  }: FileDatabaseType) {
-    this.filePath = filePath;
+  constructor({ filePath, validationSchema }: FileDatabaseType) {
+    if (!filePath) {
+      const serviceName = getServiceNameUnsafe();
+      if (serviceName) {
+        this.filePath = `/var/lib/danielhammerl/${paramCase(serviceName)}`;
+      } else {
+        this.filePath = null;
+        this.initializeLater();
+      }
+    } else {
+      this.filePath = filePath;
+    }
     this.validationSchema = validationSchema;
   }
 
   public async saveData(data: T, { exposeExceptions = false }: SaveDataOption): Promise<boolean> {
+    if (!this.filePath) {
+      throw new Error('Cannot save data cause FileDatabase is not initialized yet');
+    }
+
     if (this.validationSchema) {
       try {
         this.validationSchema.validateSync(data);
@@ -61,6 +73,10 @@ export class FileDatabase<T> {
     defaultData: T | null = null,
     { exposeExceptions = false, saveDefaultDataOnError = false }: GetDataOptions
   ): Promise<T | null> {
+    if (!this.filePath) {
+      throw new Error('Cannot save data cause FileDatabase is not initialized yet');
+    }
+
     if (fs.existsSync(this.filePath)) {
       const data = JSON.parse(fs.readFileSync(this.filePath).toString());
 
@@ -83,7 +99,12 @@ export class FileDatabase<T> {
       }
       return defaultData;
     }
-
-    return defaultData;
   }
+
+  private initializeLater = () => {
+    const eventEmitter = new EventEmitter();
+    eventEmitter.on('serviceNameSet', () => {
+      this.filePath = `/var/lib/danielhammerl/${paramCase(getServiceName())}`;
+    });
+  };
 }
