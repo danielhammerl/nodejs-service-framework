@@ -17,5 +17,6 @@
       "matchUpdateTypes": ["patch"],
       "automerge": true
     }
-  ]
+  ],
+  "ignoreDeps": ["node"]
 }
