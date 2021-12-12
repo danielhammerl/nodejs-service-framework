@@ -8,7 +8,7 @@
     "lib"
   ],
   "engines": {
-    "node": ">= 16.0"
+    "node": ">= v16.13.1"
   },
   "files": [
     "build/",
