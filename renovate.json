@@ -18,5 +18,6 @@
       "automerge": true
     }
   ],
-  "ignoreDeps": ["node"]
+  "ignoreDeps": ["node"],
+  "ignoreTests": true
 }
