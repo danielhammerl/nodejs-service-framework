@@ -59,7 +59,7 @@
     "node-fetch": "^2.6.6",
     "tcp-port-used": "^1.0.2",
     "winston": "^3.3.3",
-    "winston-transport": "^4.4.0",
+    "winston-transport": "^4.4.1",
     "yup": "^0.32.11"
   }
 }
