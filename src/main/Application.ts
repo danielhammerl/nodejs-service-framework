@@ -110,36 +110,10 @@ async function startApplication(orm: MikroORM | null, metaData: ApplicationMetaD
   const webserverHost = getConfig<string>('webserver.host');
 
   if (metaData.connectToServiceRegistry) {
-    try {
-      const serviceRegistryResult = await connectToServiceRegistry({
-        applicationName: metaData.serviceName,
-        port: webserverPort,
-      });
-
-      if (serviceRegistryResult?.status === 200) {
-        try {
-          const body = await serviceRegistryResult.json();
-          if (body.connected === true) {
-            log('info', 'Connected to service registry');
-          } else {
-            log('error', 'Unexpected response from service registry');
-          }
-        } catch {
-          log('error', 'Unexpected response from service registry');
-        }
-      } else if (serviceRegistryResult) {
-        log('error', 'Could not connect to service registry', {
-          metadata: {
-            serverResponse: {
-              status: serviceRegistryResult.status,
-              body: await serviceRegistryResult.json(),
-            },
-          },
-        });
-      }
-    } catch (e: unknown) {
-      log('error', 'Could not connect to service registry', e as Error);
-    }
+    await connectToServiceRegistry({
+      applicationName: metaData.serviceName,
+      port: webserverPort,
+    });
   }
 
   if (orm) {
