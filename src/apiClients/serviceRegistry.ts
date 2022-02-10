@@ -2,7 +2,7 @@ import fetch, { Response } from 'node-fetch';
 import { log } from '../logging';
 import { getConfig } from '../config';
 import { getEnvironment } from '../utils/getEnvironment';
-import {MS_PER_SECOND, sleep} from "../utils/sleep";
+import { MS_PER_SECOND, sleep } from '../utils/sleep';
 
 export interface ServiceRegistryData {
   applicationName: string;
@@ -74,8 +74,7 @@ export const connectToServiceRegistry = async (serviceData: ServiceRegistryData)
       }
     }
 
-
-    if(!connected) {
+    if (!connected) {
       tryCount++;
       await sleep(MS_PER_SECOND * 60);
     }
