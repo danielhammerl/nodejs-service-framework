@@ -8,8 +8,7 @@
     ":prConcurrentLimit10",
     "group:monorepos",
     "group:recommended",
-    "workarounds:all",
-    ":preserveSemverRanges"
+    "workarounds:all"
   ],
   "rangeStrategy": "bump",
   "packageRules": [
