@@ -85,7 +85,16 @@ async function startApplication(orm: MikroORM | null, metaData: ApplicationMetaD
   if (orm) {
     log('framework', `Check database against model specifications`);
     const generator = orm.getSchemaGenerator();
-    const updateDump = await generator.getUpdateSchemaSQL(false, true, false, false);
+    const updateDump = await generator.getUpdateSchemaSQL({
+      wrap: false,
+      safe: true,
+      dropTables: false,
+      dropDb: false,
+    });
+
+    if (getEnvironment() === 'test_framework') {
+      log('debug', `updateDump:${updateDump}`);
+    }
 
     if (updateDump.trim().length > 0) {
       log('info', `Differences between database and models found: `);
