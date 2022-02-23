@@ -78,5 +78,5 @@ export const connectToServiceRegistry = async (serviceData: ServiceRegistryData)
       tryCount++;
       await sleep(MS_PER_SECOND * 60);
     }
-  } while (!connected || tryCount < 5);
+  } while (connected || tryCount >= 5);
 };
