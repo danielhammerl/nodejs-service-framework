@@ -29,6 +29,7 @@ export const connectToServiceRegistry = async (serviceData: ServiceRegistryData)
   let tryCount = 0;
 
   do {
+    tryCount++;
     try {
       const response = await connectToServiceRegistryApiCall(serviceData);
 
@@ -75,8 +76,7 @@ export const connectToServiceRegistry = async (serviceData: ServiceRegistryData)
     }
 
     if (!connected) {
-      tryCount++;
       await sleep(MS_PER_SECOND * 60);
     }
-  } while (connected || tryCount >= 5);
+  } while (!connected || tryCount < 5);
 };
