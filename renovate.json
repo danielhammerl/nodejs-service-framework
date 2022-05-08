@@ -10,7 +10,7 @@
     "group:recommended",
     "workarounds:all"
   ],
-  "rangeStrategy": "bump",
+  "rangeStrategy": "update-lockfile",
   "packageRules": [
     {
       "matchUpdateTypes": ["patch"],
