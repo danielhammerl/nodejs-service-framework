@@ -4,6 +4,7 @@ import { getServiceName, getServiceNameUnsafe } from '../internal/serviceName';
 import { paramCase } from 'change-case';
 const fsp = fs.promises;
 import EventEmitter from 'events';
+import { log } from '../logging';
 
 export type GetDataOptions = {
   exposeExceptions?: boolean;
@@ -29,14 +30,19 @@ export class FileDatabase<T> {
 
   constructor({ filePath, validationSchema }: FileDatabaseType) {
     if (!filePath) {
+      log('debug', 'fileDatabase filepath is not set ...');
       const serviceName = getServiceNameUnsafe();
       if (serviceName) {
+        log('debug', '... but service name is set, so set default');
+
         this.filePath = `/var/lib/danielhammerl/${paramCase(serviceName)}`;
       } else {
+        log('debug', '... ahd service name is set too, so initialize later');
         this.filePath = null;
         this.initializeLater();
       }
     } else {
+      log('debug', `fileDatabase filepath is set to ${filePath}`);
       this.filePath = filePath;
     }
     this.validationSchema = validationSchema;
@@ -74,7 +80,7 @@ export class FileDatabase<T> {
     { exposeExceptions = false, saveDefaultDataOnError = false }: GetDataOptions
   ): Promise<T | null> {
     if (!this.filePath) {
-      throw new Error('Cannot save data cause FileDatabase is not initialized yet');
+      throw new Error('Cannot get data cause FileDatabase is not initialized yet');
     }
 
     if (fs.existsSync(this.filePath)) {
@@ -104,6 +110,7 @@ export class FileDatabase<T> {
   private initializeLater = () => {
     const eventEmitter = new EventEmitter();
     eventEmitter.on('serviceNameSet', () => {
+      log('debug', 'serviceNameSet event triggered: set fileDB filepath now');
       this.filePath = `/var/lib/danielhammerl/${paramCase(getServiceName())}`;
     });
   };

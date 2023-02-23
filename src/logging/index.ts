@@ -23,7 +23,7 @@ export const initLogging = (): void => {
     ].filter(nonNullable);
   };
 
-  // This methods formats the loglevel output
+  // This method formats the loglevel output
   // Besides that it adds brackets around the level and print it as uppercase, it also pads the string
   // with whitespaces so that all log levels are equal long and the message always starts in the same column
   // [INFO]       x
