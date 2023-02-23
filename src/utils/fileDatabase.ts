@@ -37,7 +37,7 @@ export class FileDatabase<T> {
 
         this.filePath = `/var/lib/danielhammerl/${paramCase(serviceName)}`;
       } else {
-        log('debug', '... ahd service name is not set too, so initialize later');
+        log('debug', '... and service name is not set too, so initialize later');
         this.filePath = null;
         this.initializeLater();
       }
@@ -50,7 +50,11 @@ export class FileDatabase<T> {
 
   public async saveData(data: T, { exposeExceptions = false }: SaveDataOption): Promise<boolean> {
     if (!this.filePath) {
-      throw new Error('Cannot save data cause FileDatabase is not initialized yet');
+      if (getServiceNameUnsafe()) {
+        this.filePath = `/var/lib/danielhammerl/${paramCase(getServiceName())}`;
+      } else {
+        throw new Error('Cannot save data cause FileDatabase is not initialized yet');
+      }
     }
 
     if (this.validationSchema) {
@@ -80,7 +84,11 @@ export class FileDatabase<T> {
     { exposeExceptions = false, saveDefaultDataOnError = false }: GetDataOptions
   ): Promise<T | null> {
     if (!this.filePath) {
-      throw new Error('Cannot get data cause FileDatabase is not initialized yet');
+      if (getServiceNameUnsafe()) {
+        this.filePath = `/var/lib/danielhammerl/${paramCase(getServiceName())}`;
+      } else {
+        throw new Error('Cannot get data cause FileDatabase is not initialized yet');
+      }
     }
 
     if (fs.existsSync(this.filePath)) {
