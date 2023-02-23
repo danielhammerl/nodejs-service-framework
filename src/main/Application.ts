@@ -31,7 +31,7 @@ export interface ApplicationMetaData {
  */
 export const InitApplication = (metaData: ApplicationMetaData): void => {
   process.title = paramCase(metaData.serviceName);
-
+  log('framework', 'set service name');
   setServiceName(metaData.serviceName);
   initLogging();
 

@@ -6,6 +6,7 @@ let _serviceName: string | undefined;
 export const setServiceName = (serviceName: string): void => {
   _serviceName = serviceName;
   const eventEmitter = new EventEmitter();
+  log('debug', 'emit serviceNameSet');
   eventEmitter.emit('serviceNameSet');
 };
 

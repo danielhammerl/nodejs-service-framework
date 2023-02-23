@@ -37,7 +37,7 @@ export class FileDatabase<T> {
 
         this.filePath = `/var/lib/danielhammerl/${paramCase(serviceName)}`;
       } else {
-        log('debug', '... ahd service name is set too, so initialize later');
+        log('debug', '... ahd service name is not set too, so initialize later');
         this.filePath = null;
         this.initializeLater();
       }
