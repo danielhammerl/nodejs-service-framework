@@ -13,7 +13,7 @@ export const logToLoggingService = (logProps: LoggingInformation, application: s
   return fetch(
     getEnvironment() === 'test_framework'
       ? 'https://api.danielhammerl.de/logging-service/'
-      : getConfig('logging.loggingServiceUrl') ?? 'http://localhost:30000/logging-service/',
+      : getConfig('logging.loggingServiceUrl') ?? 'http://127.0.0.1:30000/logging-service/',
     {
       method: 'POST',
       headers: {

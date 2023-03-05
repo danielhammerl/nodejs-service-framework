@@ -8,7 +8,7 @@ import { getEnvironment } from '../utils/getEnvironment';
 
 const defaultConfig = {
   webserver: {
-    host: 'localhost',
+    host: '127.0.0.1',
   },
   debugMode: false,
   serviceRegistryPassphrase: '$SERVICE_REGISTRY_PASSPHRASE',
