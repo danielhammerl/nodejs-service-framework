@@ -10,7 +10,7 @@ export interface ServiceRegistryData {
 }
 
 const connectToServiceRegistryApiCall = async (serviceData: ServiceRegistryData): Promise<Response | void> => {
-  return await fetch('http://localhost:127.0.0.1/register', {
+  return await fetch('http://127.0.0.1:30000/register', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
