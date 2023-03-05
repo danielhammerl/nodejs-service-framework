@@ -69,6 +69,7 @@ export class FileDatabase<T> {
     }
 
     try {
+      await fsp.mkdir(this.filePath.split('/').slice(0, -1).join('/'), { recursive: true });
       await fsp.writeFile(this.filePath, JSON.stringify(data));
       return true;
     } catch (e: unknown) {
