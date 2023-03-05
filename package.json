@@ -1,7 +1,7 @@
 {
   "name": "@danielhammerl/nodejs-service-framework",
   "type": "commonjs",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "keywords": [
     "nodejs",
     "typescript",
