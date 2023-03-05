@@ -2,6 +2,7 @@ import { MikroORM } from '@mikro-orm/core';
 import { MikroORMOptions } from '@mikro-orm/core/utils/Configuration';
 import { getConfig } from '../config';
 import { log } from '../logging';
+import { getEnvironment } from "../utils/getEnvironment";
 
 let orm: MikroORM | null = null;
 
@@ -17,6 +18,8 @@ export const _initOrm = async (entities: MikroORMOptions['entities']): Promise<M
       type: databaseConfig.type,
       clientUrl: databaseConfig.url,
       entities,
+      verbose: getEnvironment() !== 'production',
+      debug: getEnvironment() !== 'production',
     });
     return orm;
   } catch (e) {
