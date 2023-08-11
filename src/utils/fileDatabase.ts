@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { BaseSchema } from 'yup';
+import { Schema } from 'yup';
 import { getServiceName, getServiceNameUnsafe } from '../internal/serviceName';
 import { paramCase } from 'change-case';
 const fsp = fs.promises;
@@ -21,12 +21,12 @@ export type SaveDataOption = {
 
 export type FileDatabaseType = {
   filePath?: string;
-  validationSchema?: BaseSchema;
+  validationSchema?: Schema;
 };
 
 export class FileDatabase<T> {
   private filePath: string | null;
-  private readonly validationSchema?: BaseSchema;
+  private readonly validationSchema?: Schema;
 
   constructor({ filePath, validationSchema }: FileDatabaseType) {
     if (!filePath) {
