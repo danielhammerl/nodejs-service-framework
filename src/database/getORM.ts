@@ -2,7 +2,7 @@ import { MikroORM } from '@mikro-orm/core';
 import { MikroORMOptions } from '@mikro-orm/core/utils/Configuration';
 import { getConfig } from '../config';
 import { log } from '../logging';
-import { getEnvironment } from "../utils/getEnvironment";
+import { getEnvironment } from '../utils/getEnvironment';
 
 let orm: MikroORM | null = null;
 
