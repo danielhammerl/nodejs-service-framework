@@ -7,7 +7,7 @@ import { getEnvironment } from '../utils/getEnvironment';
 let orm: MikroORM | null = null;
 
 export const _initOrm = async (entities: MikroORMOptions['entities']): Promise<MikroORM> => {
-  const databaseConfig = getConfig<{ type: 'mysql'; url: string }>('database');
+  const databaseConfig = getConfig<{ type: 'mysql'; url: string, verboseLogging?: boolean }>('database');
   if (!databaseConfig) {
     return log('critical', 'database is not configured correctly');
   }
@@ -18,8 +18,8 @@ export const _initOrm = async (entities: MikroORMOptions['entities']): Promise<M
       type: databaseConfig.type,
       clientUrl: databaseConfig.url,
       entities,
-      verbose: getEnvironment() !== 'production',
-      debug: getEnvironment() !== 'production',
+      verbose: databaseConfig.verboseLogging,
+      debug: databaseConfig.verboseLogging,
     });
     return orm;
   } catch (e) {
