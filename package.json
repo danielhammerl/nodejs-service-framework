@@ -1,6 +1,5 @@
 {
   "name": "@danielhammerl/nodejs-service-framework",
-  "type": "commonjs",
   "version": "1.0.0",
   "keywords": [
     "nodejs",
