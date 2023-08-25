@@ -5,7 +5,7 @@
     "target": "ES2022",
     "lib": ["ES2022"],
     "allowJs": true,
-    "moduleResolution": "nodenext",
+    "moduleResolution": "node",
     "skipLibCheck": true,
     "outDir": "build/",
     "experimentalDecorators": true
