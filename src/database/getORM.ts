@@ -1,5 +1,4 @@
-import { MikroORM } from '@mikro-orm/core';
-import { MikroORMOptions } from '@mikro-orm/core/utils/Configuration';
+import { MikroORM, MikroORMOptions } from '@mikro-orm/core';
 import { getConfig } from '../config';
 import { log } from '../logging';
 
