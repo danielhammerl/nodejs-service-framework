@@ -1,4 +1,3 @@
-import fetch, { Response } from 'node-fetch';
 import { getConfig } from '../config';
 import { getEnvironment } from '../utils/getEnvironment';
 
