@@ -31,7 +31,7 @@
     "@types/express": "^4.17.13",
     "@types/jsonwebtoken": "^8.5.6",
     "@types/lodash.get": "^4.4.6",
-    "@types/node": "^18.0.0",
+    "@types/node": "^20.0.0",
     "@types/tcp-port-used": "^1.0.0",
     "@types/yup": "^0.29.13",
     "child_process": "1.0.2",
