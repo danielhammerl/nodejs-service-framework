@@ -17,6 +17,9 @@
       "automerge": true
     }
   ],
+  "lockFileMaintenance": {
+    "enabled": true
+  },
   "ignoreDeps": ["node"],
   "ignoreTests": true,
   "hostRules": [
