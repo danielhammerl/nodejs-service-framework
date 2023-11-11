@@ -4,7 +4,6 @@
     ":dependencyDashboard",
     ":semanticPrefixFixDepsChoreOthers",
     ":ignoreModulesAndTests",
-    ":prHourlyLimit2",
     ":prConcurrentLimitNone",
     "group:monorepos",
     "group:recommended",
