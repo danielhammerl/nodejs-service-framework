@@ -1,6 +1,6 @@
 {
   "name": "@danielhammerl/nodejs-service-framework",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "keywords": [
     "nodejs",
     "typescript",
