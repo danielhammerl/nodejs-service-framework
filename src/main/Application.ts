@@ -66,7 +66,7 @@ export const InitApplication = (metaData: ApplicationMetaData): void => {
 
   // TODO handle exception in express when port is already in use
   process.on('uncaughtException', function (err) {
-    log('critical', 'Uncaught exception! This may be a bug in nodejs-service-framework', err);
+    log('critical', `Uncaught exception! ${JSON.stringify(err)}`);
   });
 
   process.on('SIGINT', () => {
