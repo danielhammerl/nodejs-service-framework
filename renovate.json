@@ -11,6 +11,7 @@
     "group:recommended",
     "workarounds:all"
   ],
+  "gitAuthor": "Renovate <renovate@danielhammerl.de>",
   "rangeStrategy": "update-lockfile",
   "packageRules": [
     {
