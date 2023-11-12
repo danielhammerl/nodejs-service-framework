@@ -18,7 +18,8 @@
     }
   ],
   "lockFileMaintenance": {
-    "enabled": true
+    "enabled": true,
+    "schedule": "at any time"
   },
   "ignoreDeps": ["node"],
   "ignoreTests": true,
