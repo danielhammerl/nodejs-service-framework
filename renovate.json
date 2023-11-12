@@ -5,6 +5,7 @@
     ":semanticPrefixFixDepsChoreOthers",
     ":ignoreModulesAndTests",
     ":prConcurrentLimitNone",
+    ":prHourlyLimitNone",,
     "group:monorepos",
     "group:recommended",
     "workarounds:all"
