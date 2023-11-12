@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { Schema } from 'yup';
+import { Lazy, Schema } from 'yup';
 import { getServiceName, getServiceNameUnsafe } from '../internal/serviceName';
 import { paramCase } from 'change-case';
 const fsp = fs.promises;
@@ -21,12 +21,12 @@ export type SaveDataOption = {
 
 export type FileDatabaseType = {
   filePath?: string;
-  validationSchema?: Schema;
+  validationSchema?: Schema | Lazy<unknown>;
 };
 
 export class FileDatabase<T> {
   private filePath: string | null;
-  private readonly validationSchema?: Schema;
+  private readonly validationSchema?: Schema | Lazy<unknown>;
 
   constructor({ filePath, validationSchema }: FileDatabaseType) {
     if (!filePath) {
@@ -48,7 +48,7 @@ export class FileDatabase<T> {
     this.validationSchema = validationSchema;
   }
 
-  public async saveData(data: T, { exposeExceptions = false }: SaveDataOption): Promise<boolean> {
+  public async saveData(data: T, { exposeExceptions = true }: SaveDataOption): Promise<boolean> {
     if (!this.filePath) {
       if (getServiceNameUnsafe()) {
         this.filePath = `/var/lib/danielhammerl/${paramCase(getServiceName())}`;
