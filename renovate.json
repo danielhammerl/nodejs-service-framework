@@ -6,6 +6,7 @@
     ":ignoreModulesAndTests",
     ":prConcurrentLimitNone",
     ":prHourlyLimitNone",
+    ":semanticCommits",
     "group:monorepos",
     "group:recommended",
     "workarounds:all"
