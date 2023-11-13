@@ -1,5 +1,4 @@
 import { getConfig } from '../config';
-import { getEnvironment } from '../utils/getEnvironment';
 import { SERVICE_REGISTRY_URL } from '../constants/infrastructure';
 
 export interface LoggingInformation {
