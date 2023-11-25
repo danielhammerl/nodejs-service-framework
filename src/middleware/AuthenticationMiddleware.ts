@@ -11,12 +11,14 @@ export const AuthenticationHandler: Handler = (req: Request, res, next) => {
   }
   const token = req.headers.authorization.replace('Bearer ', '');
   if (!token) {
+    log('debug', `Authentication failed, no jwt token exists`);
     throw new UnauthenticatedException();
   }
   let decoded: JwtPayload | string;
   try {
     decoded = jwt.verify(token, getConfig('security.secretKey'));
   } catch {
+    log('debug', `Authentication failed, jwt token exists but is not valid`);
     throw new UnauthenticatedException();
   }
 
