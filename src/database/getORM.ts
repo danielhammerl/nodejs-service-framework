@@ -1,6 +1,7 @@
 import { MikroORM, MikroORMOptions } from '@mikro-orm/core';
 import { getConfig } from '../config';
 import { log } from '../logging';
+import { DriverException } from '@mikro-orm/core/exceptions';
 
 let orm: MikroORM | null = null;
 
@@ -21,6 +22,9 @@ export const _initOrm = async (entities: MikroORMOptions['entities']): Promise<M
     });
     return orm;
   } catch (e) {
+    if ((e as DriverException).code === 'ERR_INVALID_URL') {
+      return log('critical', `Failed initializing database connection: ${databaseConfig.url} is not a valid url`);
+    }
     return log('critical', 'Failed initializing database connection', e as Error);
   }
 };
