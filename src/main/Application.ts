@@ -138,7 +138,7 @@ async function startApplication(orm: MikroORM | null, metaData: ApplicationMetaD
     (secretKey === 'notverysecret' || secretKey === '$SECRET_KEY')
   ) {
     log(
-      'warning',
+      'critical',
       'No SECRET_KEY specified! Most services need one (for authentication against user-service). When your service dont need one you can suppress this message by add following configuration: "security.noSecretKey": true'
     );
   }

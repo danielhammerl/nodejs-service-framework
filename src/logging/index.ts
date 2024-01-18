@@ -82,24 +82,17 @@ function log(logLevel: logLevels, message: string, params?: additionalLogParams)
 
   if (logLevel === 'critical') {
     if (getEnvironment() === 'production' || getEnvironment() === 'test_framework') {
-      try {
-        logToLoggingService(
-          { message, stack: params?.stack?.toString(), metadata: params?.metadata?.toString() },
-          getServiceName()
-        )
-          .then(() => {
-            process.exit(1);
-          })
-          .catch(() => {
-            process.exit(1);
-          })
-          .finally(() => {
-            process.exit(1);
-          });
-      } catch (err) {
+      logToLoggingService(
+        { message, stack: params?.stack?.toString(), metadata: params?.metadata?.toString() },
+        getServiceName()
+      ).finally(() => {
+        // eslint-disable-next-line no-console
+        console.log('Service stopped due to critical error');
         process.exit(1);
-      }
+      });
     } else {
+      // eslint-disable-next-line no-console
+      console.log('Service stopped due to critical error');
       process.exit(1);
     }
   } else {
