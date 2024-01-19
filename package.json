@@ -30,7 +30,7 @@
     "@babel/core": "^7.23.3",
     "@babel/preset-env": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
-    "@danielhammerl/eslint-config": "^0.2.0",
+    "@danielhammerl/eslint-config": "^1.0.0",
     "@jest/globals": "^29.7.0",
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.0",
