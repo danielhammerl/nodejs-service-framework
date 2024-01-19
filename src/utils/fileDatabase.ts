@@ -24,6 +24,10 @@ export type FileDatabaseType = {
   validationSchema?: Schema | Lazy<unknown>;
 };
 
+const getDefaultPath = (serviceName: string): string => {
+  return `/var/lib/danielhammerl/service-dbs/${paramCase(serviceName)}`;
+};
+
 export class FileDatabase<T> {
   private filePath: string | null;
   private readonly validationSchema?: Schema | Lazy<unknown>;
@@ -35,7 +39,7 @@ export class FileDatabase<T> {
       if (serviceName) {
         log('debug', '... but service name is set, so set default');
 
-        this.filePath = `/var/lib/danielhammerl/${paramCase(serviceName)}`;
+        this.filePath = getDefaultPath(serviceName);
       } else {
         log('debug', '... and service name is not set too, so initialize later');
         this.filePath = null;
@@ -51,7 +55,7 @@ export class FileDatabase<T> {
   public async saveData(data: T, { exposeExceptions = true }: SaveDataOption): Promise<boolean> {
     if (!this.filePath) {
       if (getServiceNameUnsafe()) {
-        this.filePath = `/var/lib/danielhammerl/${paramCase(getServiceName())}`;
+        this.filePath = getDefaultPath(getServiceName());
       } else {
         throw new Error('Cannot save data cause FileDatabase is not initialized yet');
       }
@@ -86,7 +90,7 @@ export class FileDatabase<T> {
   ): Promise<T | null> {
     if (!this.filePath) {
       if (getServiceNameUnsafe()) {
-        this.filePath = `/var/lib/danielhammerl/${paramCase(getServiceName())}`;
+        this.filePath = getDefaultPath(getServiceName());
       } else {
         throw new Error('Cannot get data cause FileDatabase is not initialized yet');
       }
@@ -120,7 +124,7 @@ export class FileDatabase<T> {
     const eventEmitter = new EventEmitter();
     eventEmitter.on('serviceNameSet', () => {
       log('debug', 'serviceNameSet event triggered: set fileDB filepath now');
-      this.filePath = `/var/lib/danielhammerl/service-dbs/${paramCase(getServiceName())}`;
+      this.filePath = getDefaultPath(getServiceName());
     });
   };
 }
