@@ -120,7 +120,7 @@ export class FileDatabase<T> {
     const eventEmitter = new EventEmitter();
     eventEmitter.on('serviceNameSet', () => {
       log('debug', 'serviceNameSet event triggered: set fileDB filepath now');
-      this.filePath = `/var/lib/danielhammerl/${paramCase(getServiceName())}`;
+      this.filePath = `/var/lib/danielhammerl/service-dbs/${paramCase(getServiceName())}`;
     });
   };
 }
