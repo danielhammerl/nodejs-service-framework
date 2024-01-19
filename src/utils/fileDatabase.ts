@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { Lazy, Schema } from 'yup';
 import { getServiceName, getServiceNameUnsafe } from '../internal/serviceName';
-import { paramCase } from 'change-case';
+import { kebabCase } from 'change-case';
 const fsp = fs.promises;
 import EventEmitter from 'events';
 import { log } from '../logging';
@@ -25,7 +25,7 @@ export type FileDatabaseType = {
 };
 
 const getDefaultPath = (serviceName: string): string => {
-  return `/var/lib/danielhammerl/service-dbs/${paramCase(serviceName)}`;
+  return `/var/lib/danielhammerl/service-dbs/${kebabCase(serviceName)}`;
 };
 
 export class FileDatabase<T> {
