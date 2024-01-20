@@ -13,7 +13,19 @@ export const expectPermissionOneOf = (req: Request, permissions: Permission[]): 
   }
 
   if (!req.permissions.some((element) => permissions.includes(element))) {
-    throw new UnauthorizedException();
+    throw new UnauthorizedException(`Dont have one of required permission: ${permissions.toString()}`);
+  }
+
+  return;
+};
+
+export const expectPermissionAllOf = (req: Request, permissions: Permission[]): void | never => {
+  if (!isAuthenticated(req)) {
+    throw new UnauthenticatedException();
+  }
+
+  if (!req.permissions.every((element) => permissions.includes(element))) {
+    throw new UnauthorizedException(`Dont have all of required permission: ${permissions.toString()}`);
   }
 
   return;

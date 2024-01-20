@@ -6,6 +6,7 @@ export { getConfig } from './config';
 export { winstonLogLevel } from './logging/logLevels';
 export { log } from './logging';
 export * from './types';
+export * from './utils/request';
 export * from './exceptions';
 export { AuthenticationHandler } from './middleware/AuthenticationMiddleware';
 export { ServiceRegistryData } from './apiClients/serviceRegistry';
