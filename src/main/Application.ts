@@ -11,6 +11,7 @@ import { setServiceName } from '../internal/serviceName';
 import { getFreePortFromConfig } from '../utils/getFreePortFromConfig';
 import { connectToServiceRegistry } from '../apiClients/serviceRegistry';
 import { getEnvironment } from '../utils/getEnvironment';
+import { Configuration } from '@mikro-orm/core/utils/Configuration';
 
 export interface ApplicationMetaData {
   mikroOrmEntities?: MikroORMOptions['entities'];
@@ -82,27 +83,32 @@ export const InitApplication = (metaData: ApplicationMetaData): void => {
 
 async function startApplication(orm: MikroORM | null, metaData: ApplicationMetaData) {
   if (orm) {
-    log('framework', `Check database against model specifications`);
-    const generator = orm.getSchemaGenerator();
-    const updateDump = await generator.getUpdateSchemaSQL({
-      wrap: false,
-      safe: true,
-      dropTables: false,
-      dropDb: false,
-    });
+    const dbConfigType = getConfig<keyof typeof Configuration.PLATFORMS>('database.type');
+    if (dbConfigType === 'mysql') {
+      log('framework', `Check database against model specifications`);
+      const generator = orm.getSchemaGenerator();
+      const updateDump = await generator.getUpdateSchemaSQL({
+        wrap: false,
+        safe: true,
+        dropTables: false,
+        dropDb: false,
+      });
 
-    if (getEnvironment() === 'test_framework') {
-      log('debug', `updateDump:${updateDump}`);
-    }
+      if (getEnvironment() === 'test_framework') {
+        log('debug', `updateDump:${updateDump}`);
+      }
 
-    if (updateDump.trim().length > 0) {
-      log('info', `Differences between database and models found: `);
-      log('framework', updateDump);
+      if (updateDump.trim().length > 0) {
+        log('info', `Differences between database and models found: `);
+        log('framework', updateDump);
 
-      await generator.updateSchema();
-      log('info', `Differences applied`);
+        await generator.updateSchema();
+        log('info', `Differences applied`);
+      } else {
+        log('framework', `No Differences found`);
+      }
     } else {
-      log('framework', `No Differences found`);
+      log('framework', `Dont check database against model specifications, only supported on db type mysql`);
     }
   }
 

@@ -2,11 +2,16 @@ import { MikroORM, MikroORMOptions } from '@mikro-orm/core';
 import { getConfig } from '../config';
 import { log } from '../logging';
 import { DriverException } from '@mikro-orm/core/exceptions';
+import { Configuration } from '@mikro-orm/core/utils/Configuration';
 
 let orm: MikroORM | null = null;
 
 export const _initOrm = async (entities: MikroORMOptions['entities']): Promise<MikroORM> => {
-  const databaseConfig = getConfig<{ type: 'mysql'; url: string; verboseLogging?: boolean }>('database');
+  const databaseConfig = getConfig<{
+    type: keyof typeof Configuration.PLATFORMS;
+    url: string;
+    verboseLogging?: boolean;
+  }>('database');
   if (!databaseConfig) {
     return log('critical', 'database is not configured correctly');
   }
