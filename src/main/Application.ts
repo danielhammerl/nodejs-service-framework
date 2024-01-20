@@ -1,7 +1,7 @@
 import express, { Express } from 'express';
 import bodyParser from 'body-parser';
 import { MikroORM, RequestContext, MikroORMOptions } from '@mikro-orm/core';
-import { kebabCase } from 'change-case';
+import { paramCase } from 'change-case';
 
 import { _initOrm } from '../database/getORM';
 import { initLogging, log } from '../logging';
@@ -29,7 +29,7 @@ export interface ApplicationMetaData {
  * @constructor
  */
 export const InitApplication = (metaData: ApplicationMetaData): void => {
-  process.title = kebabCase(metaData.serviceName);
+  process.title = paramCase(metaData.serviceName);
   log('framework', 'set service name');
   setServiceName(metaData.serviceName);
   initLogging();
