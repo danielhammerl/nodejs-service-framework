@@ -1,7 +1,8 @@
 import { Permission } from '@danielhammerl/user-service-api';
 import { Request } from 'express';
 import { AuthenticatedRequest } from '../types';
-import { UnauthenticatedException, UnauthorizedException } from '../exceptions';
+import { UnauthenticatedException, UnauthorizedException, ValidationException } from '../exceptions';
+import * as yup from 'yup';
 
 export const isAuthenticated = (req: Request): req is AuthenticatedRequest => {
   return 'userId' in req && 'permissions' in req;
@@ -29,4 +30,12 @@ export const expectPermissionAllOf = (req: Request, permissions: Permission[]): 
   }
 
   return;
+};
+
+export const expectRequestBodyIsValid = (requestBody: Record<string, unknown>, schema: yup.Schema): void | never => {
+  try {
+    schema.validateSync(requestBody);
+  } catch (e) {
+    throw new ValidationException(e as Error);
+  }
 };
