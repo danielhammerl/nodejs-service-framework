@@ -25,7 +25,7 @@ export const expectPermissionAllOf = (req: Request, permissions: Permission[]): 
     throw new UnauthenticatedException();
   }
 
-  if (!req.permissions.every((element) => permissions.includes(element))) {
+  if (!permissions.every((element) => req.permissions.includes(element))) {
     throw new UnauthorizedException(`Dont have all of required permission: ${permissions.toString()}`);
   }
 

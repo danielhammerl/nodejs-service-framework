@@ -48,13 +48,24 @@ describe('request', () => {
       expect(() => expectPermissionAllOf(request, [Permission.ADMIN, Permission.READ_USER])).not.toThrow();
     });
 
-    it('should throw Exception if permission check fails', () => {
+    it('should return void if permission check succeeds - 2', () => {
       // @ts-expect-error don't want to implement this
       const request: AuthenticatedRequest = {
         userId: 'test',
         permissions: [Permission.ADMIN, Permission.READ_USER],
       };
-      expect(() => expectPermissionAllOf(request, [Permission.READ_USER])).toThrow(UnauthorizedException);
+      expect(() => expectPermissionAllOf(request, [Permission.ADMIN])).not.toThrow();
+    });
+
+    it('should throw Exception if permission check fails', () => {
+      // @ts-expect-error don't want to implement this
+      const request: AuthenticatedRequest = {
+        userId: 'test',
+        permissions: [Permission.ADMIN],
+      };
+      expect(() => expectPermissionAllOf(request, [Permission.ADMIN, Permission.READ_USER])).toThrow(
+        UnauthorizedException
+      );
     });
 
     it('should throw Unauthenticated Exception if unauthenticated', () => {
