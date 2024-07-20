@@ -30,7 +30,7 @@ const getDefaultPath = (serviceName: string): string => {
 };
 
 export class FileDatabase<T> {
-  private filePath: string | null;
+  private filePath?: string;
   private readonly validationSchema?: Schema | Lazy<unknown>;
 
   constructor({ filePath, validationSchema }: FileDatabaseType) {
@@ -43,7 +43,6 @@ export class FileDatabase<T> {
         this.filePath = getDefaultPath(serviceName);
       } else {
         log('debug', '... and service name is not set too, so initialize later');
-        this.filePath = null;
         this.initializeLater();
       }
     } else {
