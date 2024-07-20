@@ -33,8 +33,8 @@ export class FileDatabase<T> {
   private filePath?: string;
   private readonly validationSchema?: Schema | Lazy<unknown>;
 
-  constructor({ filePath, validationSchema }: FileDatabaseType) {
-    if (!filePath) {
+  constructor(options: FileDatabaseType = { filePath: undefined, validationSchema: undefined }) {
+    if (!options.filePath) {
       log('debug', 'fileDatabase filepath is not set ...');
       const serviceName = getServiceNameUnsafe();
       if (serviceName) {
@@ -46,10 +46,10 @@ export class FileDatabase<T> {
         this.initializeLater();
       }
     } else {
-      log('debug', `fileDatabase filepath is set to ${filePath}`);
-      this.filePath = filePath;
+      log('debug', `fileDatabase filepath is set to ${options.filePath}`);
+      this.filePath = options.filePath;
     }
-    this.validationSchema = validationSchema;
+    this.validationSchema = options.validationSchema;
   }
 
   public async saveData(data: T, options: SaveDataOption = { exposeExceptions: true }): Promise<boolean> {
