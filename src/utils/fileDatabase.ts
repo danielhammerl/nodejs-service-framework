@@ -5,6 +5,7 @@ import { paramCase } from 'change-case';
 const fsp = fs.promises;
 import EventEmitter from 'events';
 import { log } from '../logging';
+import { isLocalEnvironment } from './getEnvironment';
 
 export type GetDataOptions = {
   exposeExceptions?: boolean;
@@ -25,7 +26,7 @@ export type FileDatabaseType = {
 };
 
 const getDefaultPath = (serviceName: string): string => {
-  return `/var/lib/danielhammerl/service-dbs/${paramCase(serviceName)}`;
+  return isLocalEnvironment() ? './db' : `/var/lib/danielhammerl/service-dbs/${paramCase(serviceName)}`;
 };
 
 export class FileDatabase<T> {
