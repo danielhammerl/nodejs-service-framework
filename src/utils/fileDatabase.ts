@@ -52,7 +52,7 @@ export class FileDatabase<T> {
     this.validationSchema = validationSchema;
   }
 
-  public async saveData(data: T, { exposeExceptions = true }: SaveDataOption): Promise<boolean> {
+  public async saveData(data: T, options: SaveDataOption = { exposeExceptions: true }): Promise<boolean> {
     if (!this.filePath) {
       if (getServiceNameUnsafe()) {
         this.filePath = getDefaultPath(getServiceName());
@@ -65,7 +65,7 @@ export class FileDatabase<T> {
       try {
         this.validationSchema.validateSync(data);
       } catch (e: unknown) {
-        if (exposeExceptions) {
+        if (options.exposeExceptions) {
           throw e;
         }
         return false;
@@ -77,7 +77,7 @@ export class FileDatabase<T> {
       await fsp.writeFile(this.filePath, JSON.stringify(data));
       return true;
     } catch (e: unknown) {
-      if (exposeExceptions) {
+      if (options.exposeExceptions) {
         throw e;
       }
       return false;
