@@ -86,7 +86,7 @@ export class FileDatabase<T> {
 
   public async getData(
     defaultData: T | null = null,
-    { exposeExceptions = false, saveDefaultDataOnError = false }: GetDataOptions
+    options: GetDataOptions = { exposeExceptions: false, saveDefaultDataOnError: false }
   ): Promise<T | null> {
     if (!this.filePath) {
       if (getServiceNameUnsafe()) {
@@ -104,7 +104,7 @@ export class FileDatabase<T> {
           this.validationSchema.validateSync(data);
           return data;
         } catch (e: unknown) {
-          if (exposeExceptions) {
+          if (options.exposeExceptions) {
             throw e;
           }
           return defaultData;
@@ -113,8 +113,8 @@ export class FileDatabase<T> {
 
       return data;
     } else {
-      if (defaultData && saveDefaultDataOnError) {
-        await this.saveData(defaultData, { exposeExceptions });
+      if (defaultData && options.saveDefaultDataOnError) {
+        await this.saveData(defaultData, { exposeExceptions: options.exposeExceptions });
       }
       return defaultData;
     }
