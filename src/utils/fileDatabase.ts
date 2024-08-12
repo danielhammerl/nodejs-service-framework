@@ -101,16 +101,9 @@ export class FileDatabase<T> {
         const data = JSON.parse(fs.readFileSync(this.filePath).toString());
 
         if (this.validationSchema) {
-          try {
-            this.validationSchema.validateSync(data);
-            return data;
-          } catch (e: unknown) {
-            if (options.exposeExceptions) {
-              throw e;
-            }
-            return defaultData;
-          }
+          this.validationSchema.validateSync(data);
         }
+
         return data;
       } catch (e: unknown) {
         if (options.exposeExceptions) {
