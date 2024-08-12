@@ -97,21 +97,27 @@ export class FileDatabase<T> {
     }
 
     if (fs.existsSync(this.filePath)) {
-      const data = JSON.parse(fs.readFileSync(this.filePath).toString());
+      try {
+        const data = JSON.parse(fs.readFileSync(this.filePath).toString());
 
-      if (this.validationSchema) {
-        try {
-          this.validationSchema.validateSync(data);
-          return data;
-        } catch (e: unknown) {
-          if (options.exposeExceptions) {
-            throw e;
+        if (this.validationSchema) {
+          try {
+            this.validationSchema.validateSync(data);
+            return data;
+          } catch (e: unknown) {
+            if (options.exposeExceptions) {
+              throw e;
+            }
+            return defaultData;
           }
-          return defaultData;
         }
+        return data;
+      } catch (e: unknown) {
+        if (options.exposeExceptions) {
+          throw e;
+        }
+        return defaultData;
       }
-
-      return data;
     } else {
       if (defaultData && options.saveDefaultDataOnError) {
         await this.saveData(defaultData, { exposeExceptions: options.exposeExceptions });
