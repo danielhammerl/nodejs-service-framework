@@ -3,12 +3,17 @@ import { Request } from 'express';
 import { AuthenticatedRequest } from '../types';
 import { UnauthenticatedException, UnauthorizedException, ValidationException } from '../exceptions';
 import * as yup from 'yup';
+import { getConfig } from '../config';
 
 export const isAuthenticated = (req: Request): req is AuthenticatedRequest => {
-  return 'userId' in req && 'permissions' in req;
+  return getConfig('security.ignoreAuthorization') || ('userId' in req && 'permissions' in req);
 };
 
 export const expectPermissionOneOf = (req: Request, permissions: Permission[]): void | never => {
+  if (getConfig('security.ignoreAuthorization')) {
+    return;
+  }
+
   if (!isAuthenticated(req)) {
     throw new UnauthenticatedException();
   }
@@ -21,6 +26,10 @@ export const expectPermissionOneOf = (req: Request, permissions: Permission[]): 
 };
 
 export const expectPermissionAllOf = (req: Request, permissions: Permission[]): void | never => {
+  if (getConfig('security.ignoreAuthorization')) {
+    return;
+  }
+
   if (!isAuthenticated(req)) {
     throw new UnauthenticatedException();
   }

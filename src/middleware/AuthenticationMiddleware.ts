@@ -6,6 +6,11 @@ import { log } from '../logging';
 import { AuthenticatedRequest } from '../types';
 
 export const AuthenticationHandler: Handler = (req: Request, res, next) => {
+  if (getConfig('security.ignoreAuthorization')) {
+    next();
+    return;
+  }
+
   if (typeof req.headers?.authorization !== 'string') {
     throw new UnauthenticatedException();
   }
