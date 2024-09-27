@@ -1,9 +1,13 @@
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it, jest } from '@jest/globals';
 import { expectPermissionAllOf, expectPermissionOneOf } from './request';
 import { Permission } from '@danielhammerl/user-service-api';
 import { AuthenticatedRequest } from '../types';
 import { Request } from 'express';
 import { UnauthenticatedException, UnauthorizedException } from '../exceptions';
+
+jest.mock('../config', () => ({
+  getConfig: () => false,
+}));
 
 describe('request', () => {
   describe('expectPermissionOneOf', () => {
