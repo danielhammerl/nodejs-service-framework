@@ -20,9 +20,7 @@ export const AuthenticationMiddleware: Handler = (req: Request, res, next) => {
     (req as AuthenticatedRequest).userId = decoded.userId;
 
     next();
-    return;
   } catch {
     next();
-    return;
   }
 };

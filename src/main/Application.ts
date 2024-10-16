@@ -152,6 +152,7 @@ async function startApplication(orm: MikroORM | null, metaData: ApplicationMetaD
 
   app.use(bodyParser.json());
   app.use(express.json());
+  app.use(AuthenticationMiddleware);
 
   if (metaData.hasHealthEndpoint === true || typeof metaData?.hasHealthEndpoint === 'undefined') {
     app.get('/health', (req, res) => res.status(200).send(metaData.serviceName));
@@ -160,7 +161,6 @@ async function startApplication(orm: MikroORM | null, metaData: ApplicationMetaD
   // TODO add catch
   metaData?.beforeStartMethod(app).then(() => {
     app.use(ErrorHandler);
-    app.use(AuthenticationMiddleware);
     app.listen(webserverPort, webserverHost, () => {
       log('info', `Webserver started on ${webserverHost}:${webserverPort}`);
     });
