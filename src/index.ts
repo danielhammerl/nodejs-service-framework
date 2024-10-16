@@ -8,7 +8,6 @@ export { log } from './logging';
 export * from './types';
 export * from './utils/request';
 export * from './exceptions';
-export { AuthenticationHandler } from './middleware/AuthenticationMiddleware';
 export { ServiceRegistryData } from './apiClients/serviceRegistry';
 export * from './utils/getEnvironment';
 export { FileDatabase } from './utils/fileDatabase';

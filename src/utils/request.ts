@@ -9,7 +9,7 @@ export const isAuthenticated = (req: Request): req is AuthenticatedRequest => {
   return getConfig('security.ignoreAuthorization') || ('userId' in req && 'permissions' in req);
 };
 
-export const expectPermissionOneOf = (req: Request, permissions: Permission[]): void | never => {
+export const expectIsAuthenticated = (req: Request): void | never => {
   if (getConfig('security.ignoreAuthorization')) {
     return;
   }
@@ -18,7 +18,17 @@ export const expectPermissionOneOf = (req: Request, permissions: Permission[]): 
     throw new UnauthenticatedException();
   }
 
-  if (!req.permissions.some((element) => permissions.includes(element))) {
+  return;
+};
+
+export const expectPermissionOneOf = (req: Request, permissions: Permission[]): void | never => {
+  if (getConfig('security.ignoreAuthorization')) {
+    return;
+  }
+
+  expectIsAuthenticated(req);
+
+  if (!(req as AuthenticatedRequest).permissions.some((element) => permissions.includes(element))) {
     throw new UnauthorizedException(`Dont have one of required permission: ${permissions.toString()}`);
   }
 
@@ -30,11 +40,9 @@ export const expectPermissionAllOf = (req: Request, permissions: Permission[]): 
     return;
   }
 
-  if (!isAuthenticated(req)) {
-    throw new UnauthenticatedException();
-  }
+  expectIsAuthenticated(req);
 
-  if (!permissions.every((element) => req.permissions.includes(element))) {
+  if (!permissions.every((element) => (req as AuthenticatedRequest).permissions.includes(element))) {
     throw new UnauthorizedException(`Dont have all of required permission: ${permissions.toString()}`);
   }
 

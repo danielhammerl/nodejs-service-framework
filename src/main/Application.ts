@@ -12,6 +12,7 @@ import { getFreePortFromConfig } from '../utils/getFreePortFromConfig';
 import { connectToServiceRegistry } from '../apiClients/serviceRegistry';
 import { getEnvironment } from '../utils/getEnvironment';
 import { Configuration } from '@mikro-orm/core/utils/Configuration';
+import { AuthenticationMiddleware } from '../middleware/AuthenticationMiddleware';
 
 export interface ApplicationMetaData {
   mikroOrmEntities?: MikroORMOptions['entities'];
@@ -159,6 +160,7 @@ async function startApplication(orm: MikroORM | null, metaData: ApplicationMetaD
   // TODO add catch
   metaData?.beforeStartMethod(app).then(() => {
     app.use(ErrorHandler);
+    app.use(AuthenticationMiddleware);
     app.listen(webserverPort, webserverHost, () => {
       log('info', `Webserver started on ${webserverHost}:${webserverPort}`);
     });
