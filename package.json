@@ -49,7 +49,7 @@
   },
   "dependencies": {
     "@danielhammerl/user-service-api": ">1.0.7",
-    "@mikro-orm/core": "^5.0.3",
+    "@mikro-orm/core": "^6.0.0",
     "body-parser": "^1.19.1",
     "change-case": "^4.0.0",
     "dotenv": "^16.0.0",
