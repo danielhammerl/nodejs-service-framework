@@ -1,5 +1,4 @@
 import express, { Express } from 'express';
-import bodyParser from 'body-parser';
 import { MikroORM, RequestContext, MikroORMOptions } from '@mikro-orm/core';
 import { paramCase } from 'change-case';
 
@@ -68,7 +67,9 @@ export const InitApplication = (metaData: ApplicationMetaData): void => {
 
   // TODO handle exception in express when port is already in use
   process.on('uncaughtException', function (err) {
-    log('critical', `Uncaught exception! ${JSON.stringify(err)}`);
+    // eslint-disable-next-line no-console
+    console.error(err);
+    log('critical', `Uncaught exception! ${err?.toString()}`);
   });
 
   process.on('SIGINT', () => {
@@ -150,7 +151,6 @@ async function startApplication(orm: MikroORM | null, metaData: ApplicationMetaD
     );
   }
 
-  app.use(bodyParser.json());
   app.use(express.json());
   app.use(AuthenticationMiddleware);
 
