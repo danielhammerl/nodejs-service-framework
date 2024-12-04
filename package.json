@@ -54,7 +54,7 @@
     "change-case": "^4.0.0",
     "dotenv": "^16.0.0",
     "express": "^4.17.1",
-    "express-async-handler": "~1.1.4",
+    "express-async-handler": "~1.2.0",
     "jsonwebtoken": "^9.0.0",
     "lodash.get": "^4.4.2",
     "logform": "^2.3.0",
