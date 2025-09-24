@@ -2,13 +2,24 @@ import { MikroORM, MikroORMOptions } from '@mikro-orm/core';
 import { getConfig } from '../config';
 import { log } from '../logging';
 import { DriverException } from '@mikro-orm/core/exceptions';
-import { Configuration } from '@mikro-orm/core/utils/Configuration';
+import { MIKRO_ORM_DRIVERS } from '../constants/mikro-orm';
 
 let orm: MikroORM | null = null;
 
+const getDriver = (type: (typeof MIKRO_ORM_DRIVERS)[number]) => {
+  switch (type) {
+    case 'mysql':
+      // eslint-disable-next-line @typescript-eslint/no-var-requires,node/no-missing-require
+      return require('@mikro-orm/mysql').MySqlDriver;
+    case 'mongodb':
+      // eslint-disable-next-line @typescript-eslint/no-var-requires,node/no-missing-require
+      return require('@mikro-orm/mongodb').MongoDriver;
+  }
+};
+
 export const _initOrm = async (entities: MikroORMOptions['entities']): Promise<MikroORM> => {
   const databaseConfig = getConfig<{
-    type: keyof typeof Configuration.PLATFORMS;
+    type: (typeof MIKRO_ORM_DRIVERS)[number];
     url: string;
     verboseLogging?: boolean;
   }>('database');
@@ -19,7 +30,7 @@ export const _initOrm = async (entities: MikroORMOptions['entities']): Promise<M
   // TODO what if we pass the wrong db type as config?
   try {
     orm = await MikroORM.init({
-      type: databaseConfig.type,
+      driver: getDriver(databaseConfig.type),
       clientUrl: databaseConfig.url,
       entities,
       verbose: databaseConfig.verboseLogging,

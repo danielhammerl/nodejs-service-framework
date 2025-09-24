@@ -10,8 +10,8 @@ import { setServiceName } from '../internal/serviceName';
 import { getFreePortFromConfig } from '../utils/getFreePortFromConfig';
 import { connectToServiceRegistry } from '../apiClients/serviceRegistry';
 import { getEnvironment } from '../utils/getEnvironment';
-import { Configuration } from '@mikro-orm/core/utils/Configuration';
 import { AuthenticationMiddleware } from '../middleware/AuthenticationMiddleware';
+import { MIKRO_ORM_DRIVERS } from '../constants/mikro-orm';
 
 export interface ApplicationMetaData {
   mikroOrmEntities?: MikroORMOptions['entities'];
@@ -85,7 +85,7 @@ export const InitApplication = (metaData: ApplicationMetaData): void => {
 
 async function startApplication(orm: MikroORM | null, metaData: ApplicationMetaData) {
   if (orm) {
-    const dbConfigType = getConfig<keyof typeof Configuration.PLATFORMS>('database.type');
+    const dbConfigType = getConfig<(typeof MIKRO_ORM_DRIVERS)[number]>('database.type');
     if (dbConfigType === 'mysql') {
       log('framework', `Check database against model specifications`);
       const generator = orm.getSchemaGenerator();
